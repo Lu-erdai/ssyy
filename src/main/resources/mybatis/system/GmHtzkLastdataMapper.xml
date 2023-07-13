@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.htzklastdata.mapper.GmHtzkLastdataMapper">
+
+    <resultMap type="GmHtzkLastdata" id="GmHtzkLastdataResult">
+        <result property="id" column="id"/>
+        <result property="gatewaySN" column="gatewaySN"/>
+        <result property="gatewayName" column="gatewayName"/>
+        <result property="gatewayTypeName" column="gatewayTypeName"/>
+        <result property="unit" column="unit"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="value" column="value"/>
+        <result property="recordTime" column="record_time"/>
+    </resultMap>
+
+    <sql id="selectGmHtzkLastdataVo">
+        select id, gatewaySN, gatewayName, gatewayTypeName, unit, code, name, value, record_time from gm_htzk_lastdata
+    </sql>
+
+    <select id="selectGmHtzkLastdataList" parameterType="GmHtzkLastdata" resultMap="GmHtzkLastdataResult">
+        <include refid="selectGmHtzkLastdataVo"/>
+        <where>
+            <if test="gatewaySN != null  and gatewaySN != ''">and gatewaySN = #{gatewaySN}</if>
+            <if test="gatewayName != null  and gatewayName != ''">and gatewayName like concat('%', #{gatewayName},
+                '%')
+            </if>
+            <if test="gatewayTypeName != null  and gatewayTypeName != ''">and gatewayTypeName like concat('%',
+                #{gatewayTypeName}, '%')
+            </if>
+            <if test="unit != null  and unit != ''">and unit = #{unit}</if>
+            <if test="code != null  and code != ''">and code = #{code}</if>
+            <if test="name != null  and name != ''">and name like concat('%', #{name}, '%')</if>
+            <if test="value != null ">and value = #{value}</if>
+            <if test="recordTime != null ">and record_time = #{recordTime}</if>
+        </where>
+    </select>
+
+    <select id="selectGmHtzkLastdataById" parameterType="Long" resultMap="GmHtzkLastdataResult">
+        <include refid="selectGmHtzkLastdataVo"/>
+        where id = #{id}
+    </select>
+
+    <select id="selectAllLastDataBySNCode" resultMap="GmHtzkLastdataResult">
+        <include refid="selectGmHtzkLastdataVo"/>
+        where gatewaySN=#{gatewaySN} and code = #{code}
+    </select>
+
+    <select id="selectAllLastData" resultMap="GmHtzkLastdataResult">
+        <include refid="selectGmHtzkLastdataVo"/>
+    </select>
+
+
+
+    <insert id="insertGmHtzkLastdata" parameterType="GmHtzkLastdata" useGeneratedKeys="true" keyProperty="id">
+        insert into gm_htzk_lastdata
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="gatewaySN != null">gatewaySN,</if>
+            <if test="gatewayName != null">gatewayName,</if>
+            <if test="gatewayTypeName != null">gatewayTypeName,</if>
+            <if test="unit != null">unit,</if>
+            <if test="code != null">code,</if>
+            <if test="name != null">name,</if>
+            <if test="value != null">value,</if>
+            <if test="recordTime != null">record_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="gatewaySN != null">#{gatewaySN},</if>
+            <if test="gatewayName != null">#{gatewayName},</if>
+            <if test="gatewayTypeName != null">#{gatewayTypeName},</if>
+            <if test="unit != null">#{unit},</if>
+            <if test="code != null">#{code},</if>
+            <if test="name != null">#{name},</if>
+            <if test="value != null">#{value},</if>
+            <if test="recordTime != null">#{recordTime},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGmHtzkLastdata" parameterType="GmHtzkLastdata">
+        update gm_htzk_lastdata
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="gatewaySN != null">gatewaySN = #{gatewaySN},</if>
+            <if test="gatewayName != null">gatewayName = #{gatewayName},</if>
+            <if test="gatewayTypeName != null">gatewayTypeName = #{gatewayTypeName},</if>
+            <if test="unit != null">unit = #{unit},</if>
+            <if test="code != null">code = #{code},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="recordTime != null">record_time = #{recordTime},</if>
+        </trim>
+        where gatewaySN = #{gatewaySN}
+        and code = #{code}
+    </update>
+
+    <delete id="deleteGmHtzkLastdataById" parameterType="Long">
+        delete from gm_htzk_lastdata where id = #{id}
+    </delete>
+
+    <delete id="deleteGmHtzkLastdataByIds" parameterType="String">
+        delete from gm_htzk_lastdata where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+
+
+
+</mapper>

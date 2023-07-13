@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--    <link th:href="@{/ajax/libs/bootstrap-table/bootstrap-table.min.css?v=20200727}" rel="stylesheet"/>-->
+    <link th:href="@{/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/sweetalert.css}" rel="stylesheet"/>
+    <!--    <th:block th:include="include :: header('新增报警配置参数')" />-->
+    <script src="http://lib.baomitu.com/chimee-player/1.1.10/chimee-player.browser.js"></script>
+    <!--    <script src="/js/jquery.min.js"></script>-->
+    <!--    <script src="/js/bootstrap.min.js"></script>-->
+    <!--    <link rel="stylesheet" href="/static/css/bootstrap.min.css">-->
+    <script th:src="@{/js/jquery.min.js}"></script>
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <script th:src="@{/js/sweetalert.min.js}"></script>
+
+    <style>
+
+        .parent {
+            display: grid;
+            grid-template-columns: repeat(3, 630px);
+            grid-template-rows: 115px 30px 200px  repeat(2, 311px);
+            grid-column-gap: 10px;
+            grid-row-gap: 10px;
+        }
+
+        .div1 {
+            grid-area: 1 / 1 / 2 / 4;
+        }
+
+        .div2 {
+            grid-area: 2 / 1 / 3 / 2;
+        }
+
+        .div3 {
+            grid-area: 2 / 2 / 3 / 3;
+        }
+
+        .div4 {
+            grid-area: 2 / 3 / 3 / 4;
+        }
+
+        .div5 {
+            grid-area: 3 / 1 / 4 / 2;
+        }
+
+        .div6 {
+            grid-area: 4 / 1 / 5 / 2;
+        }
+
+        .div7 {
+            grid-area: 5 / 1 / 6 / 2;
+        }
+
+        .div8 {
+            grid-area: 3 / 2 / 6 / 3;
+        }
+
+        .div9 {
+            grid-area: 3 / 3 / 6 / 4;
+        }
+
+        .div10 {
+            grid-area: 3 / 3 / 4 / 4;
+        }
+
+
+        .testswitch {
+            position: relative;
+            float: right;
+            width: 90px;
+            /*margin: 0;*/
+            /*margin-top: 20px;*/
+            margin-right: 35%;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .testswitch-checkbox {
+            display: none;
+        }
+
+        .testswitch-label {
+            display: block;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #999999;
+            border-radius: 20px;
+        }
+
+        .testswitch-inner {
+            display: block;
+            width: 200%;
+            margin-left: -100%;
+            transition: margin 0.3s ease-in 0s;
+        }
+
+        .testswitch-inner::before, .testswitch-inner::after {
+            display: block;
+            float: right;
+            width: 50%;
+            height: 30px;
+            padding: 0;
+            line-height: 30px;
+            font-size: 14px;
+            color: white;
+            font-family: Trebuchet, Arial, sans-serif;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+
+        .testswitch-inner::after {
+            content: attr(data-on);
+            padding-left: 10px;
+            background-color: #00e500;
+            color: #FFFFFF;
+        }
+
+        .testswitch-inner::before {
+            content: attr(data-off);
+            padding-right: 10px;
+            background-color: #EEEEEE;
+            color: #999999;
+            text-align: right;
+        }
+
+        .testswitch-switch {
+            position: absolute;
+            display: block;
+            width: 22px;
+            height: 22px;
+            margin: 4px;
+            background: #FFFFFF;
+            top: 0;
+            bottom: 0;
+            right: 56px;
+            border: 2px solid #999999;
+            border-radius: 20px;
+            transition: all 0.3s ease-in 0s;
+        }
+
+        .testswitch-checkbox:checked + .testswitch-label .testswitch-inner {
+            margin-left: 0;
+        }
+
+        .testswitch-checkbox:checked + .testswitch-label .testswitch-switch {
+            right: 0px;
+        }
+        .content{
+            width: 100%;
+            height: 100%;
+        }
+
+    </style>
+
+</head>
+<!--1B3964-->
+<body style="background-color: #0a182b">
+
+
+<div class="parent">
+    <div class="div1" style="color: rgb(255, 255, 255);font-size: 50px;text-align: center;">
+        高塍水产养殖智慧大屏
+    </div>
+    <div class="div2" style="color: rgb(255, 255, 255);font-size: 20px;text-align: center;">
+        基地介绍
+    </div>
+    <div class="div3" style="color: rgb(255, 255, 255);font-size: 20px;text-align: center;">
+        投喂,过滤控制
+    </div>
+    <div class="div4" style="color: rgb(255, 255, 255);font-size: 20px;text-align: center;">
+        设备参数
+    </div>
+    <div class="div5" style="color: rgb(255, 255, 255);font-size: 15px;text-align: center;">
+        本站所有文章，如无特殊说明或标注，均为本站原创发布。
+        任何个人或组织，在未征得本站同意时，禁止复制、盗用、采集、发布本站内容到任何网站、书籍等各类媒体平台。
+        如若本站内容侵犯了原著者的合法权益，可联系我们进行处理。本站所有文章，如无特殊说明或标注，均为本站原创发布。
+        任何个人或组织，在未征得本站同意时，禁止复制、盗用、采集、发布本站内容到任何网站、书籍等各类媒体平台。
+        如若本站内容侵犯了原著者的合法权益，可联系我们进行处理。
+    </div>
+    <div class="div6" id="wrapper1">
+
+    </div>
+    <div class="div7" id="wrapper2">
+
+    </div>
+    <div class="div8" style="border:1px solid #1b6d85;background-color: #c9e2b3">
+<!--        <div style="color: black;font-size: 25px;text-align: center">-->
+<!--            轨道小车操作-->
+<!--        </div>-->
+<!--        <div style="text-align: center">-->
+<!--            <span><font style="color: black;font-weight: bold">电池电量：</font><font style="color: red">80%</font></span>-->
+<!--            <span><font style="color: black;font-weight: bold">电池电压：</font><font style="color: red">220V</font></span>-->
+<!--            <span><font style="color: black;font-weight: bold">物料高度：</font><font style="color: red">155cm</font></span>-->
+<!--        </div>-->
+
+<!--        <div style="margin-top: 15px;margin-left:20%;">-->
+<!--            <span style="color: black;font-weight: bold;font-size: 20px">运行状态:</span>-->
+<!--            <button class="btn btn-lg btn-success" onclick="controlxc('qianjin',1)">前进</button>-->
+<!--            <button class="btn btn-lg btn-success" onclick="controlxc('houtui',1)">后退</button>-->
+<!--            <button class="btn btn-lg btn-danger" onclick="controlxc('ydtz',1)">停止</button>-->
+<!--        </div>-->
+<!--        <div style="margin-top: 15px;margin-left:20%;">-->
+<!--            <span style="color: black;font-weight: bold;font-size: 20px">速度调节:</span>-->
+<!--            <button class="btn btn-lg btn-success">加速</button>-->
+<!--            <span>当前速度：</span>-->
+<!--            <button class="btn btn-lg btn-success">减速</button>-->
+<!--            <span>速度值：1-50</span>-->
+<!--        </div>-->
+
+<!--        <div style="margin-top: 20px;margin-left:20%;color: black;font-weight: bold;font-size: 20px">-->
+<!--            到达终点立即返回:-->
+<!--            <div class="testswitch">-->
+<!--                &lt;!&ndash;            <span style="color: black;font-weight: bold;font-size: 20px">到达终点立即返回h:</span>&ndash;&gt;-->
+
+<!--                <input class="testswitch-checkbox" id="onoffswitch" type="checkbox">-->
+<!--                <label class="testswitch-label" for="onoffswitch">-->
+<!--                    <span class="testswitch-inner" data-on="开启" data-off="关闭"></span>-->
+<!--                    <span class="testswitch-switch"></span>-->
+<!--                </label>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div style="margin-top: 15px;margin-left:10%;">-->
+<!--            <span style="color: black;font-weight: bold;font-size: 20px">自动喂料:</span>-->
+<!--            <button class="btn btn-lg btn-success" onclick="controlxc('zdtlks',1)">开始</button>-->
+<!--            <button class="btn btn-lg btn-danger" onclick="controlxc('zdtltz',1)">停止</button>-->
+<!--            <span style="color: black;font-weight: bold;font-size: 20px;margin-left: 5%">自动装料:</span>-->
+<!--            <button class="btn btn-lg btn-success">开始</button>-->
+<!--            <button class="btn btn-lg btn-danger">停止</button>-->
+<!--        </div>-->
+
+
+<!--        <div style="color: black;font-size: 25px;text-align: center">-->
+<!--            过滤系统-->
+<!--        </div>-->
+
+<!--        <div style="margin-top: 20px;margin-left:20%;color: black;font-weight: bold;font-size: 20px">-->
+<!--            自动过滤:-->
+<!--            <div class="testswitch">-->
+<!--                &lt;!&ndash;            <span style="color: black;font-weight: bold;font-size: 20px">到达终点立即返回h:</span>&ndash;&gt;-->
+
+<!--                <input class="testswitch-checkbox" id="glswitch" type="checkbox">-->
+<!--                <label class="testswitch-label" for="glswitch">-->
+<!--                    <span class="testswitch-inner" data-on="开启" data-off="关闭"></span>-->
+<!--                    <span class="testswitch-switch"></span>-->
+<!--                </label>-->
+<!--            </div>-->
+<!--        </div>-->
+
+        <iframe class="content" id='skyztp'
+                src="">
+        </iframe>
+    </div>
+    <div class="div9" style="border: 0">
+        <iframe class="content"
+                src="http://47.110.37.156:8111/#/sc">
+        </iframe>
+    </div>
+<!--    <div class="div10">-->
+
+<!--    </div>-->
+</div>
+
+
+<script th:inline="javascript">
+
+    $(function () {
+        var ztUrl = [[${ztUrl}]];
+        // alert("ztUrl"+ztUrl);
+        // $("#skyztp").src =ztUrl;
+        $("#skyztp").attr('src',ztUrl);
+    });
+
+
+    //http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8
+    new ChimeePlayer({
+        wrapper: '#wrapper1', // video dom容器
+        src: 'http://cmgw-vpc.lechange.com:8888/LCO/7J042B9PAZ22C4E/0/1/20221128T120415/52e5d8ab840365257cde57fee15c15df.m3u8',
+        box: 'hls',
+        isLive: true,
+        autoplay: false,
+        controls: true
+    });
+    new ChimeePlayer({
+        wrapper: '#wrapper2', // video dom容器
+        src: 'http://cmgw-vpc.lechange.com:8888/LCO/7J042B9PAZ22C4E/0/1/20221128T120415/52e5d8ab840365257cde57fee15c15df.m3u8',
+        box: 'hls',
+        isLive: true,
+        autoplay: false,
+        controls: true
+    });
+
+
+
+
+    $(document).ready(function () {
+        $("#onoffswitch").on('click', function () {
+            clickSwitch()
+        });
+        $("#glswitch").on('click', function () {
+            glclickSwitch()
+        });
+
+        var clickSwitch = function () {
+            if ($("#onoffswitch").is(':checked')) {
+                console.log("在ON的状态下");
+            } else {
+                console.log("在OFF的状态下");
+            }
+        };
+
+        var glclickSwitch = function () {
+            if ($("#glswitch").is(':checked')) {
+                console.log("在ON的状态下");
+
+                controlxc("zdglkq",2);//自动过滤开启
+
+
+            } else {
+                console.log("在OFF的状态下");
+                controlxc("zdgvgb",2);//自动过滤关闭
+
+            }
+        };
+        //设置开关在开启状态
+        $("#onoffswitch").prop('checked', true)
+
+    });
+
+
+    function controlxc(operate, projectId) {
+
+        console.log(operate + "指令...");
+
+        $.ajax({
+            type: "get",
+            timeout: 30000, //超时时间设置，单位毫秒
+            url: "/api/skyControl/setVariantValue",
+            data: {
+                operation: operate,
+                projectId: projectId
+            },
+            success: function (data) {
+                console.log("data"+data);
+                if (data == "success") {
+
+                    swal("操作成功", "", "success");
+                    console.log("请求成功" + data);
+
+                } else {
+                    swal("操作超时", "", "error");
+                    console.log("请求失败" + data);
+                }
+
+            },
+            error: function (data) {
+                console.log("操作超时=============" + data);
+            }
+        });
+
+
+    }
+
+
+</script>
+
+</body>
+</html>

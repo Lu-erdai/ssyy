@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改报警配置信息')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-alarmconfig-edit" th:object="${opAlarmconfig}">
+            <input name="id" th:field="*{id}" type="hidden">
+
+            <input name="sceneName" th:field="*{sceneName}" class="form-control" type="hidden">
+            <input name="sceneId" th:field="*{sceneId}" class="form-control" type="hidden">
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否开启：</label>
+                <div class="col-sm-8">
+                    <label class="radio-box"> <input type="radio" th:field="*{alEnable}" name="menuType" value="1" /> 是 </label>
+                    <label class="radio-box"> <input type="radio" th:field="*{alEnable}" name="menuType" value="0" /> 否 </label>
+                </div>
+            </div>
+
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通知方式：</label>
+                <div class="col-sm-8">
+                    <label class="radio-box"> <input type="radio" th:field="*{alNoticetype}" name="menuType" value="0" /> 全部 </label>
+                    <label class="radio-box"> <input type="radio" th:field="*{alNoticetype}" name="menuType" value="1" /> 手机 </label>
+                    <label class="radio-box"> <input type="radio" th:field="*{alNoticetype}" name="menuType" value="2" /> 邮件 </label>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">手机号：</label>
+                <div class="col-sm-8">
+                    <input name="alPhone" th:field="*{alPhone}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">邮箱：</label>
+                <div class="col-sm-8">
+                    <input name="alEmail" th:field="*{alEmail}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label">通知间隔：</label>
+                <div class="col-sm-8">
+                    <input name="alInterval" th:field="*{alInterval}" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/alarmconfig";
+        $("#form-alarmconfig-edit").validate({
+            focusCleanup: true,
+            rules:{
+                alPhone:{
+                    required:true,
+                    isPhone:true,
+                },
+                alInterval:{
+                    required: true,
+                    digits:true
+                },
+                alEmail:{
+                    required: true,
+                    email:true
+                },
+
+            }
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-alarmconfig-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

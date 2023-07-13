@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.skyboxval.mapper.SkyBoxvalMapper">
+    
+    <resultMap type="SkyBoxval" id="SkyBoxvalResult">
+        <result property="id"    column="id"    />
+        <result property="boxId"    column="box_id"    />
+        <result property="boxName"    column="box_name"    />
+        <result property="plcId"    column="plc_id"    />
+        <result property="variantId"    column="variant_id"    />
+        <result property="name"    column="name"    />
+        <result property="addr"    column="addr"    />
+        <result property="type"    column="type"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSkyBoxvalVo">
+        select id, box_id, box_name, plc_id, variant_id, name, addr, type, update_time from sky_boxval
+    </sql>
+
+    <select id="selectSkyBoxvalList" parameterType="SkyBoxval" resultMap="SkyBoxvalResult">
+        <include refid="selectSkyBoxvalVo"/>
+        <where>  
+            <if test="boxId != null  and boxId != ''"> and box_id = #{boxId}</if>
+            <if test="boxName != null  and boxName != ''"> and box_name like concat('%', #{boxName}, '%')</if>
+            <if test="plcId != null  and plcId != ''"> and plc_id = #{plcId}</if>
+            <if test="variantId != null "> and variant_id = #{variantId}</if>
+            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
+            <if test="addr != null  and addr != ''"> and addr = #{addr}</if>
+            <if test="type != null  and type != ''"> and type = #{type}</if>
+        </where>
+    </select>
+    
+    <select id="selectSkyBoxvalById" parameterType="Long" resultMap="SkyBoxvalResult">
+        <include refid="selectSkyBoxvalVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSkyBoxval" parameterType="SkyBoxval" useGeneratedKeys="true" keyProperty="id">
+        insert into sky_boxval
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="boxId != null">box_id,</if>
+            <if test="boxName != null">box_name,</if>
+            <if test="plcId != null">plc_id,</if>
+            <if test="variantId != null">variant_id,</if>
+            <if test="name != null">name,</if>
+            <if test="addr != null">addr,</if>
+            <if test="type != null">type,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="boxId != null">#{boxId},</if>
+            <if test="boxName != null">#{boxName},</if>
+            <if test="plcId != null">#{plcId},</if>
+            <if test="variantId != null">#{variantId},</if>
+            <if test="name != null">#{name},</if>
+            <if test="addr != null">#{addr},</if>
+            <if test="type != null">#{type},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSkyBoxval" parameterType="SkyBoxval">
+        update sky_boxval
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="boxId != null">box_id = #{boxId},</if>
+            <if test="boxName != null">box_name = #{boxName},</if>
+            <if test="plcId != null">plc_id = #{plcId},</if>
+            <if test="variantId != null">variant_id = #{variantId},</if>
+            <if test="name != null">name = #{name},</if>
+            <if test="addr != null">addr = #{addr},</if>
+            <if test="type != null">type = #{type},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSkyBoxvalById" parameterType="Long">
+        delete from sky_boxval where id = #{id}
+    </delete>
+
+    <delete id="deleteSkyBoxvalByIds" parameterType="String">
+        delete from sky_boxval where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

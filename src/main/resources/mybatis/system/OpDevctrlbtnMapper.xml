@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.devctrlbtn.mapper.OpDevctrlbtnMapper">
+    
+    <resultMap type="OpDevctrlbtn" id="OpDevctrlbtnResult">
+        <result property="dectbtnId"    column="dectbtn_id"    />
+        <result property="decoType"    column="deco_type"    />
+        <result property="dectChlno"    column="dect_chlNo"    />
+        <result property="dectCtldelay"    column="dect_ctlDelay"    />
+        <result property="dectCtltype"    column="dect_ctlType"    />
+        <result property="dectId"    column="dect_id"    />
+        <result property="dectbtnName"    column="dectbtn_name"    />
+        <result property="devId"    column="dev_id"    />
+    </resultMap>
+
+    <sql id="selectOpDevctrlbtnVo">
+        select dectbtn_id, deco_type, dect_chlNo, dect_ctlDelay, dect_ctlType, dect_id, dectbtn_name, dev_id from op_devctrlbtn
+    </sql>
+
+    <select id="selectOpDevctrlbtnList" parameterType="OpDevctrlbtn" resultMap="OpDevctrlbtnResult">
+        <include refid="selectOpDevctrlbtnVo"/>
+        <where>  
+            <if test="decoType != null "> and deco_type = #{decoType}</if>
+            <if test="dectChlno != null "> and dect_chlNo = #{dectChlno}</if>
+            <if test="dectCtldelay != null "> and dect_ctlDelay = #{dectCtldelay}</if>
+            <if test="dectCtltype != null "> and dect_ctlType = #{dectCtltype}</if>
+            <if test="dectId != null  and dectId != ''"> and dect_id = #{dectId}</if>
+            <if test="dectbtnName != null  and dectbtnName != ''"> and dectbtn_name like concat('%', #{dectbtnName}, '%')</if>
+            <if test="devId != null  and devId != ''"> and dev_id = #{devId}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpDevctrlbtnById" parameterType="String" resultMap="OpDevctrlbtnResult">
+        <include refid="selectOpDevctrlbtnVo"/>
+        where dectbtn_id = #{dectbtnId}
+    </select>
+        
+    <insert id="insertOpDevctrlbtn" parameterType="OpDevctrlbtn">
+        insert into op_devctrlbtn
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dectbtnId != null">dectbtn_id,</if>
+            <if test="decoType != null">deco_type,</if>
+            <if test="dectChlno != null">dect_chlNo,</if>
+            <if test="dectCtldelay != null">dect_ctlDelay,</if>
+            <if test="dectCtltype != null">dect_ctlType,</if>
+            <if test="dectId != null">dect_id,</if>
+            <if test="dectbtnName != null">dectbtn_name,</if>
+            <if test="devId != null">dev_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dectbtnId != null">#{dectbtnId},</if>
+            <if test="decoType != null">#{decoType},</if>
+            <if test="dectChlno != null">#{dectChlno},</if>
+            <if test="dectCtldelay != null">#{dectCtldelay},</if>
+            <if test="dectCtltype != null">#{dectCtltype},</if>
+            <if test="dectId != null">#{dectId},</if>
+            <if test="dectbtnName != null">#{dectbtnName},</if>
+            <if test="devId != null">#{devId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpDevctrlbtn" parameterType="OpDevctrlbtn">
+        update op_devctrlbtn
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="decoType != null">deco_type = #{decoType},</if>
+            <if test="dectChlno != null">dect_chlNo = #{dectChlno},</if>
+            <if test="dectCtldelay != null">dect_ctlDelay = #{dectCtldelay},</if>
+            <if test="dectCtltype != null">dect_ctlType = #{dectCtltype},</if>
+            <if test="dectId != null">dect_id = #{dectId},</if>
+            <if test="dectbtnName != null">dectbtn_name = #{dectbtnName},</if>
+            <if test="devId != null">dev_id = #{devId},</if>
+        </trim>
+        where dectbtn_id = #{dectbtnId}
+    </update>
+
+    <delete id="deleteOpDevctrlbtnById" parameterType="String">
+        delete from op_devctrlbtn where dectbtn_id = #{dectbtnId}
+    </delete>
+
+    <delete id="deleteOpDevctrlbtnByIds" parameterType="String">
+        delete from op_devctrlbtn where dectbtn_id in 
+        <foreach item="dectbtnId" collection="array" open="(" separator="," close=")">
+            #{dectbtnId}
+        </foreach>
+    </delete>
+
+</mapper>

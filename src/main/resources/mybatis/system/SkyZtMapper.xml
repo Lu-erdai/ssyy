@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.skyzt.mapper.SkyZtMapper">
+    
+    <resultMap type="SkyZt" id="SkyZtResult">
+        <result property="id"    column="id"    />
+        <result property="ztUrl"    column="zt_url"    />
+        <result property="recordTime"    column="record_time"    />
+    </resultMap>
+
+    <sql id="selectSkyZtVo">
+        select id, zt_url, record_time from sky_zt
+    </sql>
+
+    <select id="selectSkyZtList" parameterType="SkyZt" resultMap="SkyZtResult">
+        <include refid="selectSkyZtVo"/>
+        <where>  
+            <if test="ztUrl != null  and ztUrl != ''"> and zt_url = #{ztUrl}</if>
+            <if test="recordTime != null "> and record_time = #{recordTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectSkyZtById" parameterType="Long" resultMap="SkyZtResult">
+        <include refid="selectSkyZtVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSkyZt" parameterType="SkyZt">
+        insert into sky_zt
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="ztUrl != null and ztUrl != ''">zt_url,</if>
+            <if test="recordTime != null">record_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="ztUrl != null and ztUrl != ''">#{ztUrl},</if>
+            <if test="recordTime != null">#{recordTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSkyZt" parameterType="SkyZt">
+        update sky_zt
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ztUrl != null and ztUrl != ''">zt_url = #{ztUrl},</if>
+            <if test="recordTime != null">record_time = #{recordTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSkyZtById" parameterType="Long">
+        delete from sky_zt where id = #{id}
+    </delete>
+
+    <delete id="deleteSkyZtByIds" parameterType="String">
+        delete from sky_zt where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

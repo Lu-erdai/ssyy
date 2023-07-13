@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('【请填写功能名称】列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chOfferser"/>
+                            </li>
+                            <li class="select-time">
+                                <label>${comment}：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginDectBuydate]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endDectBuydate]"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="dectDecsription"/>
+                            </li>
+                            <li class="select-time">
+                                <label>${comment}：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginDectEffecttime]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endDectEffecttime]"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="dectName"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="dectNo"/>
+                            </li>
+                            <li class="select-time">
+                                <label>${comment}：</label>
+                                <input type="text" class="time-input" id="startTime" placeholder="开始时间" name="params[beginDectOverdate]"/>
+                                <span>-</span>
+                                <input type="text" class="time-input" id="endTime" placeholder="结束时间" name="params[endDectOverdate]"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="dectSerial"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="dectState"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="decttypeBtnnum"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="decttypeId"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="devId"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="sceneId"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:devctrl:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:devctrl:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:devctrl:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:devctrl:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:devctrl:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:devctrl:remove')}]];
+        var prefix = ctx + "system/devctrl";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "【请填写功能名称】",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'dectId',
+                    title: '${comment}',
+                    visible: false
+                },
+                {
+                    field: 'chOfferser',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectBuydate',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectDecsription',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectEffecttime',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectName',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectNo',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectOverdate',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectSerial',
+                    title: '${comment}'
+                },
+                {
+                    field: 'dectState',
+                    title: '${comment}'
+                },
+                {
+                    field: 'decttypeBtnnum',
+                    title: '${comment}'
+                },
+                {
+                    field: 'decttypeId',
+                    title: '${comment}'
+                },
+                {
+                    field: 'devId',
+                    title: '${comment}'
+                },
+                {
+                    field: 'sceneId',
+                    title: '${comment}'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.dectId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.dectId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

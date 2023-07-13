@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.devctrlsts.mapper.GmDevctrlstsMapper">
+    
+    <resultMap type="GmDevctrlsts" id="GmDevctrlstsResult">
+        <result property="decstId"    column="decst_id"    />
+        <result property="decstTime"    column="decst_time"    />
+        <result property="decstValid"    column="decst_valid"    />
+        <result property="dectState"    column="dect_state"    />
+        <result property="dectId"    column="dect_id"    />
+        <result property="decoSort"    column="deco_sort"    />
+    </resultMap>
+
+    <sql id="selectGmDevctrlstsVo">
+        select decst_id, decst_time, decst_valid, dect_state, dect_id, deco_sort from gm_devctrlsts
+    </sql>
+
+    <select id="selectGmDevctrlstsList" parameterType="GmDevctrlsts" resultMap="GmDevctrlstsResult">
+        <include refid="selectGmDevctrlstsVo"/>
+        <where>  
+            <if test="decstTime != null "> and decst_time = #{decstTime}</if>
+            <if test="decstValid != null "> and decst_valid = #{decstValid}</if>
+            <if test="dectState != null "> and dect_state = #{dectState}</if>
+            <if test="dectId != null  and dectId != ''"> and dect_id = #{dectId}</if>
+            <if test="decoSort != null "> and deco_sort = #{decoSort}</if>
+        </where>
+    </select>
+    
+    <select id="selectGmDevctrlstsById" parameterType="String" resultMap="GmDevctrlstsResult">
+        <include refid="selectGmDevctrlstsVo"/>
+        where decst_id = #{decstId}
+    </select>
+        
+    <insert id="insertGmDevctrlsts" parameterType="GmDevctrlsts">
+        insert into gm_devctrlsts
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="decstId != null">decst_id,</if>
+            <if test="decstTime != null">decst_time,</if>
+            <if test="decstValid != null">decst_valid,</if>
+            <if test="dectState != null">dect_state,</if>
+            <if test="dectId != null">dect_id,</if>
+            <if test="decoSort != null">deco_sort,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="decstId != null">#{decstId},</if>
+            <if test="decstTime != null">#{decstTime},</if>
+            <if test="decstValid != null">#{decstValid},</if>
+            <if test="dectState != null">#{dectState},</if>
+            <if test="dectId != null">#{dectId},</if>
+            <if test="decoSort != null">#{decoSort},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGmDevctrlsts" parameterType="GmDevctrlsts">
+        update gm_devctrlsts
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="decstTime != null">decst_time = #{decstTime},</if>
+            <if test="decstValid != null">decst_valid = #{decstValid},</if>
+            <if test="dectState != null">dect_state = #{dectState},</if>
+            <if test="dectId != null">dect_id = #{dectId},</if>
+            <if test="decoSort != null">deco_sort = #{decoSort},</if>
+        </trim>
+        where decst_id = #{decstId}
+    </update>
+
+    <delete id="deleteGmDevctrlstsById" parameterType="String">
+        delete from gm_devctrlsts where decst_id = #{decstId}
+    </delete>
+
+    <delete id="deleteGmDevctrlstsByIds" parameterType="String">
+        delete from gm_devctrlsts where decst_id in 
+        <foreach item="decstId" collection="array" open="(" separator="," close=")">
+            #{decstId}
+        </foreach>
+    </delete>
+
+</mapper>

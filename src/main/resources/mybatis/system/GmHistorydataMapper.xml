@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.historydata.mapper.GmHistorydataMapper">
+
+    <resultMap type="GmHistorydata" id="GmHistorydataResult">
+        <result property="hidaId" column="hida_id"/>
+        <result property="hidaCorrvalue" column="hida_corrValue"/>
+        <result property="hidaDatequality" column="hida_dateQuality"/>
+        <result property="hidaOrigvalue" column="hida_origValue"/>
+        <result property="hidaRecordTime" column="hida_record_time"/>
+        <result property="hidaReporttime" column="hida_reportTime"/>
+        <result property="chId" column="ch_id"/>
+    </resultMap>
+
+    <sql id="selectGmHistorydataVo">
+        select hida_id, hida_corrValue, hida_dateQuality, hida_origValue, hida_record_time, hida_reportTime, ch_id from gm_historydata
+    </sql>
+
+    <select id="selectGmHistorydataList" parameterType="GmHistorydata" resultMap="GmHistorydataResult">
+        <include refid="selectGmHistorydataVo"/>
+        <where>
+            <if test="hidaCorrvalue != null ">and hida_corrValue = #{hidaCorrvalue}</if>
+            <if test="hidaDatequality != null ">and hida_dateQuality = #{hidaDatequality}</if>
+            <if test="hidaOrigvalue != null ">and hida_origValue = #{hidaOrigvalue}</if>
+            <if test="hidaRecordTime != null ">and hida_record_time = #{hidaRecordTime}</if>
+            <if test="hidaReporttime != null ">and hida_reportTime = #{hidaReporttime}</if>
+            <if test="chId != null  and chId != ''">and ch_id = #{chId}</if>
+        </where>
+    </select>
+
+
+    <select id="selectGmHistorydataListLimit144"  resultMap="GmHistorydataResult">
+        <include refid="selectGmHistorydataVo"/>
+        where ch_Id = #{chId}
+        and
+        hida_record_time >= #{startTime}
+        and
+        hida_record_time &lt;= #{endTime}
+        order by hida_reportTime  LIMIT 0,144
+    </select>
+
+    <select id="selectGmHistorydataListLimit50"  resultMap="GmHistorydataResult">
+        SELECT hida_id, hida_corrValue, hida_dateQuality, hida_origValue, hida_record_time, hida_reportTime, ch_id
+            from (
+                select * from gm_historydata where ch_id= #{chId} order by hida_record_time desc LIMIT 50
+            )
+            as a order by
+            hida_record_time
+             LIMIT 0,50
+    </select>
+
+    <select id="selectAllGmHistorydataList"  resultMap="GmHistorydataResult">
+        <include refid="selectGmHistorydataVo"/>
+        where ch_Id = #{chId}
+        and
+        hida_record_time >= #{startTime}
+        and
+        hida_record_time &lt;= #{endTime}
+        order by hida_reportTime
+    </select>
+
+    <select id="getEchartsDataWithTime" resultMap="GmHistorydataResult">
+        <include refid="selectGmHistorydataVo"/>
+        where ch_Id = #{chId}
+        and
+        hida_record_time >= #{startTime}
+        and
+        hida_record_time &lt;= #{endTime}
+        order by hida_reportTime
+    </select>
+
+
+    <select id="selectGmHistorydataById" parameterType="Long" resultMap="GmHistorydataResult">
+        <include refid="selectGmHistorydataVo"/>
+        where hida_id = #{hidaId}
+    </select>
+
+    <insert id="insertGmHistorydata" parameterType="GmHistorydata" useGeneratedKeys="true" keyProperty="hidaId">
+        insert into gm_historydata
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hidaId != null">hida_id,</if>
+            <if test="hidaCorrvalue != null">hida_corrValue,</if>
+            <if test="hidaDatequality != null">hida_dateQuality,</if>
+            <if test="hidaOrigvalue != null">hida_origValue,</if>
+            <if test="hidaRecordTime != null">hida_record_time,</if>
+            <if test="hidaReporttime != null">hida_reportTime,</if>
+            <if test="chId != null">ch_id,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hidaId != null">#{hidaId},</if>
+            <if test="hidaCorrvalue != null">#{hidaCorrvalue},</if>
+            <if test="hidaDatequality != null">#{hidaDatequality},</if>
+            <if test="hidaOrigvalue != null">#{hidaOrigvalue},</if>
+            <if test="hidaRecordTime != null">#{hidaRecordTime},</if>
+            <if test="hidaReporttime != null">#{hidaReporttime},</if>
+            <if test="chId != null">#{chId},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGmHistorydata" parameterType="GmHistorydata">
+        update gm_historydata
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="hidaCorrvalue != null">hida_corrValue = #{hidaCorrvalue},</if>
+            <if test="hidaDatequality != null">hida_dateQuality = #{hidaDatequality},</if>
+            <if test="hidaOrigvalue != null">hida_origValue = #{hidaOrigvalue},</if>
+            <if test="hidaRecordTime != null">hida_record_time = #{hidaRecordTime},</if>
+            <if test="hidaReporttime != null">hida_reportTime = #{hidaReporttime},</if>
+            <if test="chId != null">ch_id = #{chId},</if>
+        </trim>
+        where hida_id = #{hidaId}
+    </update>
+
+    <delete id="deleteGmHistorydataById" parameterType="Long">
+        delete from gm_historydata where hida_id = #{hidaId}
+    </delete>
+
+    <delete id="deleteGmHistorydataByIds" parameterType="String">
+        delete from gm_historydata where hida_id in
+        <foreach item="hidaId" collection="array" open="(" separator="," close=")">
+            #{hidaId}
+        </foreach>
+    </delete>
+
+</mapper>

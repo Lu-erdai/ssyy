@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.autoctrlconfig.mapper.OpAutoctrlconfigMapper">
+
+    <resultMap type="OpAutoctrlconfig" id="OpAutoctrlconfigResult">
+        <result property="accId" column="acc_id"/>
+        <result property="sceneId" column="scene_id"/>
+        <result property="dectId" column="dect_id"/>
+        <result property="decoType" column="deco_type"/>
+        <result property="accCond" column="acc_cond"/>
+        <result property="accUser" column="acc_user"/>
+        <result property="accAddtime" column="acc_addTime"/>
+        <result property="accEnable" column="acc_enable"/>
+    </resultMap>
+
+
+    <resultMap type="com.ruoyi.project.system.vo.AutoConfigVO" id="AutoConfigVOResult">
+        <result property="accId" column="acc_id"/>
+        <result property="sceneId" column="scene_id"/>
+        <result property="dectId" column="dect_id"/>
+        <result property="decoType" column="deco_type"/>
+        <result property="accCond" column="acc_cond"/>
+        <result property="accUser" column="acc_user"/>
+        <result property="accAddtime" column="accAddtime"/>
+        <result property="accEnable" column="acc_enable"/>
+        <result property="acfId" column="acf_id"/>
+        <result property="chId" column="ch_id"/>
+        <result property="accHandle" column="acc_handle"/>
+        <result property="accCondition" column="acc_condition"/>
+        <result property="accTrigger" column="acc_trigger"/>
+        <result property="sceneName" column="scene_name"/>
+        <result property="dectName" column="dect_name"/>
+        <result property="chName" column="ch_name"/>
+        <result property="chNo" column="ch_no"/>
+    </resultMap>
+
+
+    <sql id="selectOpAutoctrlconfigVo">
+        select acc_id, scene_id, dect_id, deco_type, acc_cond, acc_user, acc_addTime, acc_enable from op_autoctrlconfig
+    </sql>
+
+    <select id="selectOpAutoctrlconfigList" parameterType="OpAutoctrlconfig" resultMap="OpAutoctrlconfigResult">
+        <include refid="selectOpAutoctrlconfigVo"/>
+        <where>
+            <if test="sceneId != null  and sceneId != ''">and scene_id = #{sceneId}</if>
+            <if test="dectId != null  and dectId != ''">and dect_id = #{dectId}</if>
+            <if test="decoType != null ">and deco_type = #{decoType}</if>
+            <if test="accCond != null ">and acc_cond = #{accCond}</if>
+            <if test="accUser != null  and accUser != ''">and acc_user = #{accUser}</if>
+            <if test="accAddtime != null ">and acc_addTime = #{accAddtime}</if>
+            <if test="accEnable != null ">and acc_enable = #{accEnable}</if>
+        </where>
+    </select>
+
+    <select id="selectOpAutoctrlconfigById" parameterType="Long" resultMap="OpAutoctrlconfigResult">
+        <include refid="selectOpAutoctrlconfigVo"/>
+        where acc_id = #{accId}
+    </select>
+
+    <select id="selectAutoConfigVOList" parameterType="String" resultMap="AutoConfigVOResult">
+
+        select scene.scene_name,devctrl.dect_name,channel.ch_name,channel.ch_no,config.deco_type,config.acc_cond,config.acc_enable,
+        factor.acc_handle,factor.acc_condition,factor.acc_trigger,config.acc_id,factor.acf_id,channel.ch_id,config.acc_user,devctrl.dect_id,scene.scene_id
+            FROM op_autoCtrlConfig config,op_autoCtrlFactor factor,op_scene scene,gm_channel channel,gm_devctrl devctrl
+        where config.scene_id = scene.scene_id
+            and config.dect_id = devctrl.dect_id
+            and config.acc_id= factor.acc_id
+            and factor.ch_id = channel.ch_id
+            and config.scene_id= #{sceneId}
+    </select>
+
+
+    <insert id="insertOpAutoctrlconfig" parameterType="OpAutoctrlconfig" useGeneratedKeys="true" keyProperty="accId">
+        insert into op_autoctrlconfig
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="sceneId != null">scene_id,</if>
+            <if test="dectId != null">dect_id,</if>
+            <if test="decoType != null">deco_type,</if>
+            <if test="accCond != null">acc_cond,</if>
+            <if test="accUser != null">acc_user,</if>
+            <if test="accAddtime != null">acc_addTime,</if>
+            <if test="accEnable != null">acc_enable,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="sceneId != null">#{sceneId},</if>
+            <if test="dectId != null">#{dectId},</if>
+            <if test="decoType != null">#{decoType},</if>
+            <if test="accCond != null">#{accCond},</if>
+            <if test="accUser != null">#{accUser},</if>
+            <if test="accAddtime != null">#{accAddtime},</if>
+            <if test="accEnable != null">#{accEnable},</if>
+        </trim>
+    </insert>
+
+    <update id="updateOpAutoctrlconfig" parameterType="OpAutoctrlconfig">
+        update op_autoctrlconfig
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="sceneId != null">scene_id = #{sceneId},</if>
+            <if test="dectId != null">dect_id = #{dectId},</if>
+            <if test="decoType != null">deco_type = #{decoType},</if>
+            <if test="accCond != null">acc_cond = #{accCond},</if>
+            <if test="accUser != null">acc_user = #{accUser},</if>
+            <if test="accAddtime != null">acc_addTime = #{accAddtime},</if>
+            <if test="accEnable != null">acc_enable = #{accEnable},</if>
+        </trim>
+        where acc_id = #{accId}
+    </update>
+
+    <delete id="deleteOpAutoctrlconfigById" parameterType="Long">
+        delete from op_autoctrlconfig where acc_id = #{accId}
+    </delete>
+
+    <delete id="deleteOpAutoctrlconfigByIds" parameterType="String">
+        delete from op_autoctrlconfig where acc_id in
+        <foreach item="accId" collection="array" open="(" separator="," close=")">
+            #{accId}
+        </foreach>
+    </delete>
+
+</mapper>

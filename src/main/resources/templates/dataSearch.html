@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <th:block th:include="include :: header('数据查询')"/>
+    <th:block th:include="include :: datetimepicker-css"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+
+        <div class="col-sm-12 search-collapse">
+            <form id="role-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <input id="dectIdHid" name="dectIdHid" type="hidden"/>
+                            <input id="treeId" name="sceneId" type="hidden"/>
+                            选择场景树：<input type="text" onclick="selectDeptTree()" id="treeName" readonly="true"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="query()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        <div class="col-sm-12 search-collapse">
+            <table class="table table-bordered table-striped">
+                <tr>
+                    <td width="20%">
+                        输入采集通道<br/>
+                        <input type="button" value="更多" onclick="showMore()" style="display: none;">
+                        <input id="checkall" type="checkbox" onclick="quanxuan(this)"checked="checked"/>  全选 / 反选
+                    </td>
+                    <td id="allChannel">
+                    </td>
+                </tr>
+                <tr>
+                    <td width="20%">选择时间</td>
+                    <td>
+                        <div class="form-group">
+                            <label class="font-noraml"></label>
+                            <div class="input-daterange input-group">
+                                <input readonly="readonly" type="text" class="input-sm form-control"
+                                       id="laydate-startTime" placeholder="时间起"/>
+                                <span class="input-group-addon">到</span>
+                                <input readonly="readonly" type="text" class="input-sm form-control"
+                                       id="laydate-endTime" placeholder="时间止"/>
+                            </div>
+                        </div>
+                    </td>
+                    <!--                    <td ><input id="startTime" style="width: 20%" type="text" class="time-input" placeholder="开始时间"/>-->
+                    <!--                        - -->
+                    <!--                        <input id="endTime" style="width: 20%" type="text" class="time-input" placeholder="结束时间"/>-->
+                    <!--                    </td>-->
+
+                </tr>
+                <tr align="center">
+                    <td colspan="2" width="1006">
+                        <div id="page">
+
+                        </div>
+                    </td>
+                </tr>
+            </table>
+
+        </div>
+
+
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table"></table>
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: datetimepicker-js"/>
+<th:block th:include="include :: bootstrap-table-export-js"/>
+
+<script type="text/javascript">
+
+    $(function () {
+        <!-- datetimepicker示例 -->
+
+
+        $("#datetimepicker-startTime").datetimepicker({
+            format: 'yyyy-mm-dd',
+            minView: "month",
+            todayBtn: true,
+            autoclose: true,
+            endDate: new Date(),
+        }).on('changeDate', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var startTime = event.date;
+            $('#datetimepicker-endTime').datetimepicker('setStartDate', startTime);
+        });
+
+        $("#datetimepicker-endTime").datetimepicker({
+            format: 'yyyy-mm-dd',
+            minView: "month",
+            todayBtn: true,
+            autoclose: true,
+            endDate: new Date(),
+        }).on('changeDate', function (event) {
+            event.preventDefault();
+            event.stopPropagation();
+            var endTime = event.date;
+            $("#datetimepicker-startTime").datetimepicker('setEndDate', endTime);
+        });
+
+        <!-- laydate示例 -->
+        layui.use('laydate', function () {
+            var laydate = layui.laydate;
+
+            var startDate = laydate.render({
+                elem: '#laydate-startTime',
+                max: $('#laydate-endTime').val(),
+                theme: 'molv',
+                trigger: 'click',
+                done: function (value, date) {
+                    // 结束时间大于开始时间
+                    if (value !== '') {
+                        endDate.config.min.year = date.year;
+                        endDate.config.min.month = date.month - 1;
+                        endDate.config.min.date = date.date;
+                    } else {
+                        endDate.config.min.year = '';
+                        endDate.config.min.month = '';
+                        endDate.config.min.date = '';
+                    }
+                }
+            });
+
+            var endDate = laydate.render({
+                elem: '#laydate-endTime',
+                min: $('#laydate-startTime').val(),
+                theme: 'molv',
+                trigger: 'click',
+                done: function (value, date) {
+                    // 开始时间小于结束时间
+                    if (value !== '') {
+                        startDate.config.max.year = date.year;
+                        startDate.config.max.month = date.month - 1;
+                        startDate.config.max.date = date.date;
+                    } else {
+                        startDate.config.max.year = '';
+                        startDate.config.max.month = '';
+                        startDate.config.max.date = '';
+                    }
+                }
+            });
+        });
+
+        $.ajax({
+            url: ctx + "system/scene" + "/initScene",
+            type: "get",
+            data: {},
+            success: function (result) {
+                // alert("xxxx"+result);
+                if (result == '') {
+                    $.modal.alert("该用户未配置场景！！");
+                    return;
+                }
+                var data = eval('(' + result + ')');
+                $("#treeId").val(data.sceneId);
+                $("#treeName").val(data.sceneName);
+                loadChannelCheckBox(data.sceneId);
+
+                var date = new Date();
+                var mon = date.getMonth() + 1;
+                var day = date.getDate();
+                var currDate = date.getFullYear() + "-" + (mon < 10 ? "0" + mon : mon) + "-" + (day < 10 ? "0" + day : day);
+                $("#laydate-startTime").val(currDate);
+                $("#laydate-endTime").val(currDate);
+            },
+            error: function (data) {
+                $.modal.alert("该用户未配置场景！！");
+            }
+        })
+
+
+    });
+
+
+    function selectDeptTree() {
+        var options = {
+            title: '场景选择',
+            width: "380",
+            url: ctx + "system/scene/selectSceneTree",
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+        loadChannelCheckBox(body.find('#treeId').val());
+    }
+
+    function loadChannelCheckBox(sceneId) {
+
+        if (sceneId == "") {
+            $.modal.alertWarning("请选择场景");
+            return;
+        }
+
+        //获取场景所有通道数据
+        $.getJSON(ctx + "system/scene/findAllChannelBySceneId?sceneId=" + sceneId, {
+            random: Math.random()
+        }, function (allChannelJson) {
+            // var inner = "没有找到指定的数据";
+            var inner = "";
+            // alert("allChannelJson" + allChannelJson);
+
+            if (allChannelJson.length > 0) {
+                // alert("allChannelJson.length" + allChannelJson.length);
+                $.each(allChannelJson, function (i, channel) {
+                    // inner += "<tr>";
+                    // inner += "<td style=\"border-left: 0px;border-top: 0px; border-right: 0px; width: 900px;\">&nbsp;";
+                    inner += "<input class=\"ck_" + channel.chNo + "\" checked=\"checked\" name=\"channels\" type=\"checkbox\" value=\"" + channel.chId + "\">" + channel.chName + "&nbsp;";
+                    // inner += "</td>";
+                    // inner += "</tr>";
+                });
+            } else {
+                inner += "该场景未配备通道";
+            }
+            // alert("inner" + inner);
+            jQuery("#allChannel").html(inner);
+        });
+
+
+    }
+
+    //全选 反选
+    function quanxuan(ck) {
+        var arr = document.getElementsByName("channels");
+        if (ck.checked) {
+            for (var i = 0; i < arr.length; i++) {
+                var c = arr[i];
+                c.checked = true;
+            }
+        } else {
+            for (var i = 0; i < arr.length; i++) {
+                var c = arr[i];
+                c.checked = false;
+            }
+        }
+    }
+
+
+    function query() {
+        $.table.destroy();
+        var sceneId = $("#treeId").val();
+        if (sceneId == '') {
+            $.modal.alert("请选择场景！！");
+            return false;
+        }
+
+        var channels = "";
+        var ii = 0;
+        var arr = document.getElementsByName("channels");
+
+
+        $.each(arr, function (i, channel) {
+            if (channel.checked) {
+                channels += channel.value + ",";
+                ii++;
+            }
+        });
+        if (channels.length > 0) {
+            channels = channels.substr(0, channels.length - 1);
+
+        } else {
+            $.modal.alertError("请输入采集通道");
+            return;
+        }
+
+        var startTime = $("#laydate-startTime").val();
+        var endTime = $("#laydate-endTime").val();
+
+        if (startTime == '') {
+            $.modal.alertError("请选择起始时间");
+            return;
+        }
+        if (endTime == '') {
+            $.modal.alertError("请选择结束时间");
+            return;
+        }
+
+
+        var options = {
+            url: ctx + "system/channel/getChannelHis?channels=" + channels + "&startTime=" + startTime + "&endTime=" + endTime,
+            showSearch: false,
+            showRefresh: false,
+            showToggle: false,
+            showColumns: false,
+            showExport: true,
+            exportOptions: {
+                ignoreColumn: []  //忽略第一列和最后一列
+            },
+            columns: [
+                // {
+                //     checkbox: true
+                // },
+                {
+                    field: 'chNo',
+                    title: '通道编号',
+                    sortable: true
+                },
+                {
+                    field: 'chName',
+                    title: '通道名称',
+                    sortable: true
+                },
+                {
+                    field: 'hidaCorrValue',
+                    title: '记录值',
+                    // sortable: true
+                },
+                {
+                    field: 'chUnit',
+                    title: '单位',
+                    sortable: true
+                },
+                {
+                    field: 'hidaRecordTime',
+                    title: '记录时间',
+                    sortable: true
+                }
+            ]
+        };
+        $.table.init(options);
+
+
+    }
+
+</script>
+</html>

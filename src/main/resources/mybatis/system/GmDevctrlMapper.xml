@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.devctrl.mapper.GmDevctrlMapper">
+    
+    <resultMap type="GmDevctrl" id="GmDevctrlResult">
+        <result property="dectId"    column="dect_id"    />
+        <result property="chOfferser"    column="ch_offerSer"    />
+        <result property="dectBuydate"    column="dect_buyDate"    />
+        <result property="dectDecsription"    column="dect_decsription"    />
+        <result property="dectEffecttime"    column="dect_effectTime"    />
+        <result property="dectName"    column="dect_name"    />
+        <result property="dectNo"    column="dect_no"    />
+        <result property="dectOverdate"    column="dect_overDate"    />
+        <result property="dectSerial"    column="dect_serial"    />
+        <result property="dectState"    column="dect_state"    />
+        <result property="decttypeBtnnum"    column="decttype_btnNum"    />
+        <result property="decttypeId"    column="decttype_id"    />
+        <result property="devId"    column="dev_id"    />
+        <result property="sceneId"    column="scene_id"    />
+    </resultMap>
+
+    <sql id="selectGmDevctrlVo">
+        select dect_id, ch_offerSer, dect_buyDate, dect_decsription, dect_effectTime, dect_name, dect_no, dect_overDate, dect_serial, dect_state, decttype_btnNum, decttype_id, dev_id, scene_id from gm_devctrl
+    </sql>
+
+    <select id="selectGmDevctrlList" parameterType="GmDevctrl" resultMap="GmDevctrlResult">
+        <include refid="selectGmDevctrlVo"/>
+        <where>  
+            <if test="chOfferser != null "> and ch_offerSer = #{chOfferser}</if>
+            <if test="dectBuydate != null "> and dect_buyDate = #{dectBuydate}</if>
+            <if test="dectDecsription != null  and dectDecsription != ''"> and dect_decsription = #{dectDecsription}</if>
+            <if test="dectEffecttime != null "> and dect_effectTime = #{dectEffecttime}</if>
+            <if test="dectName != null  and dectName != ''"> and dect_name like concat('%', #{dectName}, '%')</if>
+            <if test="dectNo != null  and dectNo != ''"> and dect_no = #{dectNo}</if>
+            <if test="dectOverdate != null "> and dect_overDate = #{dectOverdate}</if>
+            <if test="dectSerial != null  and dectSerial != ''"> and dect_serial = #{dectSerial}</if>
+            <if test="dectState != null "> and dect_state = #{dectState}</if>
+            <if test="decttypeBtnnum != null "> and decttype_btnNum = #{decttypeBtnnum}</if>
+            <if test="decttypeId != null  and decttypeId != ''"> and decttype_id = #{decttypeId}</if>
+            <if test="devId != null  and devId != ''"> and dev_id = #{devId}</if>
+            <if test="sceneId != null  and sceneId != ''"> and scene_id = #{sceneId}</if>
+        </where>
+    </select>
+    
+    <select id="selectGmDevctrlById" parameterType="String" resultMap="GmDevctrlResult">
+        <include refid="selectGmDevctrlVo"/>
+        where dect_id = #{dectId}
+    </select>
+        
+    <insert id="insertGmDevctrl" parameterType="GmDevctrl">
+        insert into gm_devctrl
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="dectId != null">dect_id,</if>
+            <if test="chOfferser != null">ch_offerSer,</if>
+            <if test="dectBuydate != null">dect_buyDate,</if>
+            <if test="dectDecsription != null">dect_decsription,</if>
+            <if test="dectEffecttime != null">dect_effectTime,</if>
+            <if test="dectName != null">dect_name,</if>
+            <if test="dectNo != null">dect_no,</if>
+            <if test="dectOverdate != null">dect_overDate,</if>
+            <if test="dectSerial != null">dect_serial,</if>
+            <if test="dectState != null">dect_state,</if>
+            <if test="decttypeBtnnum != null">decttype_btnNum,</if>
+            <if test="decttypeId != null">decttype_id,</if>
+            <if test="devId != null">dev_id,</if>
+            <if test="sceneId != null">scene_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="dectId != null">#{dectId},</if>
+            <if test="chOfferser != null">#{chOfferser},</if>
+            <if test="dectBuydate != null">#{dectBuydate},</if>
+            <if test="dectDecsription != null">#{dectDecsription},</if>
+            <if test="dectEffecttime != null">#{dectEffecttime},</if>
+            <if test="dectName != null">#{dectName},</if>
+            <if test="dectNo != null">#{dectNo},</if>
+            <if test="dectOverdate != null">#{dectOverdate},</if>
+            <if test="dectSerial != null">#{dectSerial},</if>
+            <if test="dectState != null">#{dectState},</if>
+            <if test="decttypeBtnnum != null">#{decttypeBtnnum},</if>
+            <if test="decttypeId != null">#{decttypeId},</if>
+            <if test="devId != null">#{devId},</if>
+            <if test="sceneId != null">#{sceneId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGmDevctrl" parameterType="GmDevctrl">
+        update gm_devctrl
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chOfferser != null">ch_offerSer = #{chOfferser},</if>
+            <if test="dectBuydate != null">dect_buyDate = #{dectBuydate},</if>
+            <if test="dectDecsription != null">dect_decsription = #{dectDecsription},</if>
+            <if test="dectEffecttime != null">dect_effectTime = #{dectEffecttime},</if>
+            <if test="dectName != null">dect_name = #{dectName},</if>
+            <if test="dectNo != null">dect_no = #{dectNo},</if>
+            <if test="dectOverdate != null">dect_overDate = #{dectOverdate},</if>
+            <if test="dectSerial != null">dect_serial = #{dectSerial},</if>
+            <if test="dectState != null">dect_state = #{dectState},</if>
+            <if test="decttypeBtnnum != null">decttype_btnNum = #{decttypeBtnnum},</if>
+            <if test="decttypeId != null">decttype_id = #{decttypeId},</if>
+            <if test="devId != null">dev_id = #{devId},</if>
+            <if test="sceneId != null">scene_id = #{sceneId},</if>
+        </trim>
+        where dect_id = #{dectId}
+    </update>
+
+    <delete id="deleteGmDevctrlById" parameterType="String">
+        delete from gm_devctrl where dect_id = #{dectId}
+    </delete>
+
+    <delete id="deleteGmDevctrlByIds" parameterType="String">
+        delete from gm_devctrl where dect_id in 
+        <foreach item="dectId" collection="array" open="(" separator="," close=")">
+            #{dectId}
+        </foreach>
+    </delete>
+
+</mapper>

@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('实时监控')"/>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+<!--    <div class="row">-->
+
+        <div class="col-sm-12 search-collapse">
+            <form id="role-form">
+                <div class="select-list">
+                    <ul>
+                        <li>
+                            <input id="dectIdHid" name="dectIdHid" type="hidden"/>
+                            <input id="treeId" name="sceneId" type="hidden"/>
+                            选择场景树：<input type="text" onclick="selectDeptTree()" id="treeName" readonly="true"/>
+                        </li>
+                        <li>
+                            <a class="btn btn-primary btn-rounded btn-sm" onclick="query()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+
+<!--        <div class="col-sm-12 select-table table-striped">-->
+<!--            <table id="bootstrap-table"></table>-->
+<!--        </div>-->
+
+
+    <div class="col-sm-12 search-collapse" id="channelList">
+<!--            <div class="col-sm-4">-->
+<!--                <div class="ibox float-e-margins">-->
+<!--                    <div class="ibox-title">-->
+<!--                        <h5>溶解氧</h5>-->
+<!--                        <div class="pull-right">-->
+<!--                            <h5>-->
+<!--                                <button type="button" onclick="alert('xxxxxxx')" class="btn btn-xs btn-white">-->
+<!--                                    <i class="fa fa-book"></i>&nbsp;趋势分析-->
+<!--                                </button>-->
+<!--                            </h5>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                    <div class="ibox-content">-->
+<!--                        <h3 class="no-margins">&nbsp;</h3>-->
+<!--                        <h1>-->
+<!--                            <img th:src="@{/img/trwd.png}"  class="img-sm" alt="User Image">-->
+
+<!--                            <span >&nbsp;abc&nbsp;mg/L</span>-->
+
+<!--                        </h1>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+    </div>
+
+        <div class="col-sm-12 select-table table-striped" id="controlDiv">
+            <table id="bootstrap-table-devctrl" class="table table-bordered table-hover">
+                <thead>
+                <tr>
+                    <td width="290">设备名称</td>
+                    <td width="290">设备状态</td>
+                    <td width="290">控制类型</td>
+                    <td width="390">设备控制</td>
+                </tr>
+                </thead>
+                <tbody id="devctrlTbody">
+                </tbody>
+
+            </table>
+        </div>
+<!--    </div>-->
+</div>
+<th:block th:include="include :: footer"/>
+<th:block th:include="include :: echarts-js"/>
+<script th:inline="javascript">
+    var prefix = ctx + "system/scene";
+
+    $(function () {
+
+        $.ajax({
+            url: prefix + "/initScene",
+            type: "get",
+            data: {},
+            success: function (result) {
+                // alert("xxxx"+result);
+                if (result == '') {
+                    $.modal.alert("该用户未配置场景！！");
+                    return;
+                }
+                var data = eval('(' + result + ')');
+                $("#treeId").val(data.sceneId);
+                $("#treeName").val(data.sceneName);
+                query();
+            },
+            error: function (data) {
+                $.modal.alert("该用户未配置场景！！");
+            }
+        })
+
+    });
+
+    function query() {
+
+        var sceneId = $("#treeId").val();
+        if (sceneId == '') {
+            $.modal.alert("请选择场景树！！");
+            return false;
+        }
+
+        $.ajax({
+            url: ctx + "system/channel/getChannelList",
+            type: "get",
+            data: {
+                "sceneId": sceneId
+            },
+            success: function (result) {
+                console.log("result"+result);
+                //拼接模块
+                pinjie(result);
+
+            },
+            error: function (data) {
+                console.log("错：", data)
+            }
+        })
+
+        // var options = {
+        //     url: prefix + "/list",
+        //     showSearch: false,
+        //     showRefresh: false,
+        //     showToggle: false,
+        //     showColumns: false,
+        //     columns: [
+        //         {
+        //             field: 'chtypeNo',
+        //             title: '通道编号'
+        //         },
+        //         {
+        //             field: 'chName',
+        //             title: '通道名称',
+        //             sortable: true
+        //         },
+        //         {
+        //             field: 'avgCorrvalue',
+        //             title: '记录值',
+        //             // sortable: true
+        //         },
+        //         {
+        //             field: 'chCorrunit',
+        //             title: '单位',
+        //             // sortable: true
+        //         },
+        //         {
+        //             field: 'hidaRecordTime',
+        //             title: '时间',
+        //             sortable: true
+        //         },
+        //
+        //         {
+        //             title: '操作',
+        //             align: 'center',
+        //             formatter: function (value, row, index) {
+        //                 var actions = [];
+        //                 actions.push('<a class="btn btn-success btn-xs ' + '" href="javascript:void(0)" onclick="showChart(\'' + row.chId + '\',\'' + row.chName + '\')"><i class="fa fa-line-chart"></i>查看今日曲线</a> ');
+        //                 return actions.join('');
+        //             }
+        //         }
+        //     ]
+        // };
+        // $.table.init(options);
+        //查询通道信息止
+
+        //查询设备控制信息起
+
+
+        showDevCtrl(sceneId);
+
+
+        //查询设备控制信息止
+
+
+    }
+
+
+    function selectDeptTree() {
+        var options = {
+            title: '场景选择',
+            width: "380",
+            url: prefix + "/selectSceneTree",
+            callBack: doSubmit
+        };
+        $.modal.openOptions(options);
+
+    }
+
+    function doSubmit(index, layero) {
+        var body = layer.getChildFrame('body', index);
+        $("#treeId").val(body.find('#treeId').val());
+        $("#treeName").val(body.find('#treeName').val());
+        layer.close(index);
+    }
+
+
+
+    function getEveryCharts(sceneId, chtype_no) {
+        $.ajax({
+            url: prefix + "/getChartsDatas",
+            type: "get",
+            data: {
+                "sceneId": sceneId,
+                "chtypeId": chtype_no,
+            },
+            success: function (result) {
+
+
+            },
+            error: function (data) {
+                console.log("错：", data)
+            }
+        })
+
+    }
+
+    function showChart(channelId, chName) {
+
+        // $.modal.alert("xxxxxxxx"+channelId);
+        // $.modal.alert("xxxxxxxx"+chName);
+        // alert("chCorrunit"+chCorrunit);
+
+        $.modal.open('曲线分析', prefix + "/getChartsDatas?chId=" + channelId + "&chName=" + chName);
+
+    }
+
+    function showDevCtrl(sceneId) {
+        // alert("xxxxx" + sceneId);
+        $.ajax({
+            cache: true,
+            type: "GET",
+            url: ctx + "system/devctrl/getAllDevBut",
+            data: {
+                "sceneId": sceneId
+            },
+            async: false,
+            error: function (request) {
+                $.modal.alertError("系统错误");
+            },
+            success: function (data) {
+                var datas = eval('(' + data + ')');
+                var htmlDect = "";
+                if (datas.length > 0) {
+
+                    // alert("datas"+datas);
+                    $.each(datas, function (i, devCtrl) {
+                        // alert("xxxxxxxxxx");
+                        var btns = devCtrl.opDevctrlbtns;
+                        var botton = "";
+
+                        $.each(btns, function (i, btn) {
+                            var btnName = btn.dectbtnName
+                            // alert("btnName"+btnName);
+                            var type = btn.decoType;
+                            // alert("type"+type);
+                            // alert("gmDevctrlsts.dectState"+devCtrl.gmDevctrlsts.dectState);
+                            if (devCtrl.gmDevctrlsts.dectState == type) {
+                                botton += "<input  onclick=\"operate('" + devCtrl.gmDevctrl.dectId + "'," + type + ")\" type=\"button\" value=" + btnName + " disabled=\"disabled\">";
+                            } else {
+                                botton += "<input  onclick=\"operate('" + devCtrl.gmDevctrl.dectId + "'," + type + ")\" type=\"button\" value=" + btnName + ">";
+                            }
+                        });
+
+                        console.log("botton" + botton);
+
+
+                        if (devCtrl.decttypeId != 'RM-1') {
+                            if (devCtrl.gmDevctrlsts.dectState == 1) {//开
+                                htmlDect += "<tr><td width=\"190\">" + devCtrl.gmDevctrl.dectName + "</td><td width=\"190\"><font color=\"green\">开启</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            } else if (devCtrl.gmDevctrlsts.dectState == 2) {//停
+                                htmlDect += "<tr><td width=\"190\">" + devCtrl.gmDevctrl.dectName + "</td><td width=\"190\"><font color=\"red\">停止</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            } else {
+                                htmlDect += "<tr><td width=\"190\">" + devCtrl.gmDevctrl.dectName + "</td><td width=\"190\"><font color=\"orange\">未知</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            }
+                        } else {
+                            if (devCtrl.gmDevctrlsts.dectState == 1) {//开
+                                htmlDect += "<tr><td width=\"190\">" + devCtrl.gmDevctrl.dectName + "</td><td width=\"190\"><font color=\"green\">上拉</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            } else if (devCtrl.gmDevctrlsts.dectState == 2) {//停
+                                htmlDect += "<tr><dectState width=\"190\">" + devCtrl.gmDevctrl.dectName + "</dectState><td width=\"190\"><font color=\"red\">停止</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            } else if (devCtrl.gmDevctrlsts.dectState == 3) {
+                                htmlDect += "<tr><td width=\"190\">" + devCtrl.gmDevctrl.dectName + "</td><td width=\"190\"><font color=\"green\">下拉</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            } else {
+                                htmlDect += "<tr><td width=\"190\">" + devCtrl.gmDevctrl.dectName + "</td><td width=\"190\"><font color=\"orange\">未知</font></td><td width=\"190\">" + devCtrl.decoSort + "</td><td width=\"190\">" + botton + "</td></tr>";
+                            }
+                        }
+
+
+                        jQuery("#devctrlTbody").html(htmlDect);
+                    });
+
+
+                } else {
+                    jQuery("#devctrlTbody").html("该场景暂无设备!!!");
+                }
+
+
+            }
+        });
+
+    }
+
+    function pinjie(result){
+        var datas = eval('(' + result + ')');
+        var htmlDect = "";
+        if (datas.length > 0) {
+            $.each(datas, function (i, channelVO) {
+                htmlDect += "<div class=\"col-sm-4\">";
+                htmlDect += "<div class=\"ibox float-e-margins\">";
+
+                htmlDect += "<div class=\"ibox-title\">";
+                htmlDect += "<h5>"+channelVO.chName+"</h5>";
+                htmlDect += "<div class=\"pull-right\">";
+                htmlDect += "<h5>";
+                htmlDect += "<button onclick=\"showChart('"+channelVO.chId+"','"+channelVO.chName+"' )\"   type=\"button\">";
+                htmlDect += "<i class=\"fa fa-book\"></i>&nbsp;趋势分析";
+                htmlDect += "</button>";
+                htmlDect += "</h5>";
+                htmlDect += "</div>"
+                htmlDect += "</div>";
+
+                htmlDect += " <div class=\"ibox-content\">";
+                htmlDect += "<h3 class=\"no-margins\">&nbsp;</h3>";
+                htmlDect += "<h1>";
+
+
+                if(channelVO.chName.indexOf("土壤温度") != -1){
+                    htmlDect +="<img src=\"/img/trwd.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("土壤水分") != -1){
+                    htmlDect +="<img src=\"/img/trsd.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("土壤湿度") != -1){
+                    htmlDect +="<img src=\"/img/trsd.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("空气温度") != -1){
+                    htmlDect +="<img src=\"/img/kqwd.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("空气湿度") != -1){
+                    htmlDect +="<img src=\"/img/kqsd.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("二氧化碳") != -1){
+                    htmlDect +="<img src=\"/img/eyht.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("光照") != -1){
+                    htmlDect +="<img src=\"/img/gz.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("铜") != -1){
+                    htmlDect +="<img src=\"/img/Cu2.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("铅") != -1){
+                    htmlDect +="<img src=\"/img/Pb2.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("镉") != -1){
+                    htmlDect +="<img src=\"/img/Cd2.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("钾") != -1){
+                    htmlDect +="<img src=\"/img/K.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("铵") != -1){
+                    htmlDect +="<img src=\"/img/NH4.png\"  class=\"img-sm\">";
+                }else if(channelVO.chName.indexOf("硝酸根") != -1){
+                    htmlDect +="<img src=\"/img/NO3.png\"  class=\"img-sm\">";
+                }
+
+
+
+                htmlDect += "<span >&nbsp;"+channelVO.avgCorrvalue+"&nbsp;"+ channelVO.chCorrunit+"</span>";
+                htmlDect += "</h1>";
+
+                htmlDect += "</div>"
+
+
+                htmlDect += "</div>";
+                htmlDect += "</div>";
+            });
+
+            jQuery("#channelList").html(htmlDect);
+
+        }else {
+            jQuery("#channelList").html("暂无通道!!!");
+        }
+
+    }
+
+
+
+    function operate(dect_id, deco_type) {
+        // if('${sessionScope.role.role_id}'=="role-4"){
+        //     alert("您没有权限进行操作!");
+        //     return;
+        // }
+        // document.getElementById("txt").value = dect_id;
+        //alert(document.getElementById("txt").value);
+        // alert("dect_id===" + dect_id + "deco_type===" + deco_type);
+        var deco_type_cn;
+        if (deco_type == 1) {
+            deco_type_cn = "启动";
+        } else if (deco_type == 2) {
+            deco_type_cn = "停止";
+        } else if (deco_type == 3) {
+            deco_type_cn = "关";
+        } else {
+            $.modal.alertError("无效操作");
+            return;
+        }
+        var option = "是否" + deco_type_cn + "设备?";
+
+        $.modal.confirm(option, function () {
+            // alert("yessssss");
+            $.getJSON(ctx + "system/devctrl/operate?dectId=" + dect_id + "&decoType=" + deco_type, {
+                    random: Math.random()
+                }, function (msm) {
+                    if (msm == '2') {
+                        $.modal.alertError("没有找到设备！");
+                        return;
+                    }
+                    if (msm == '0') {
+                        $.modal.alertError("当前设备已被其他用户控制，请稍后再试！");
+                        return;
+                    }
+                    if (msm == '1') {//currentStat = 1;
+                        $.modal.loading("请求已发送，请等待...！");
+                        $("#dectIdHid").val(dect_id);
+                        operate_timer = setInterval("reOperate()", 3000);
+
+
+                    }
+                }
+            );
+        });
+    }
+
+
+    //定时抓取operate表数据是否更新
+    function reOperate() {
+        var dectId = $("#dectIdHid").val();
+        // alert("reOperate" + dectId);
+        $.ajax({
+            cache: true,
+            type: "GET",
+            url: ctx + "system/devctrl/operateMsg",
+            data: {
+                "dectId": dectId
+            },
+            async: false,
+            error: function (request) {
+                $.modal.alertError("系统错误");
+            },
+            success: function (data) {
+                // alert("data" + data);
+
+                var dataObj = eval('(' + data + ')');
+                var decotType = dataObj.decoType;
+                var decoState = dataObj.decoState;
+                var decoResult = dataObj.decoResult
+                var decoErrorCode = dataObj.decoErrorcode;
+                // alert("decotType" + decotType + "decoState" + decoState + "decoResult" + decoResult + "decoErrorCode" + decoErrorCode);
+                // var result = "";
+                // var errorMsg = "";
+                // var endMsg = "";
+
+
+                // switch (parseInt(decoResult)) {
+                //     case 0:
+                //         result = "等待中……";
+                //         break;
+                //     case 1:
+                //         result = "成功……";
+                //         break;
+                //     case 2:
+                //         result = "失败……";
+                //         switch (parseInt(decoErrorCode)) {
+                //             case 5:
+                //                 errorMsg = "控制失败，参数错……";
+                //                 break;
+                //             case 19:
+                //                 errorMsg = "控制失败，电流异常……";
+                //                 break;
+                //             case 21:
+                //                 errorMsg = "控制失败，电源缺项……";
+                //                 break;
+                //             case 28:
+                //                 errorMsg = "控制失败，没有接电流互感器……";
+                //                 break;
+                //         }
+                //         break;
+                //     case 3:
+                //         result = "超时……";
+                //         break;
+                //     case 4:
+                //         result = "GPRS离线……";
+                //         break;
+                //     case 5:
+                //         result = "设备状态表配置错误……";
+                //         break;
+                //     case 6:
+                //         result = "设备状态无效……";
+                //         break;
+                //     case 7:
+                //         result = "设备按钮表配置错误……";
+                //         break;
+                //     case 8:
+                //         result = "控制设备不响应……";
+                //         break;
+                //     case 9:
+                //         result = "GRRS忙,暂时无法控制此GPRS设备下的其他设备……";
+                //         break;
+                // }
+
+
+                if (decoResult != 0) {
+                    if (decoResult == 1) {//成功
+                        // endMsg = result;
+                        $.modal.alertSuccess("操作成功...");
+                        operateMsgResult();
+                    } else if (decoResult == 2) {//失败情况
+                        // endMsg= errorMsg;
+                        $.modal.alertError("操作失败,请联系管理员!!!");
+                        operateMsgResult();
+                    } else {//其他情况
+                        // endMsg = result;
+                        $.modal.alertWarning("请求超时,请联系管理员");
+                        operateMsgResult();
+                    }
+
+                }
+
+
+            }
+        });
+
+
+    }
+
+    function operateMsgResult() {
+        if (operate_timer != null) {//关闭定时请求
+            clearInterval(operate_timer);
+        }
+
+        var sceneId = $("#treeId").val();
+        jQuery("#devctrlTbody").empty();//重新加载按钮
+        // alert("重新加载按钮");
+        showDevCtrl(sceneId);
+        // alert("关闭遮罩层");
+        $.modal.closeLoading();//关闭遮罩层
+    }
+
+</script>
+</body>
+</html>

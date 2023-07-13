@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.scene.mapper.OpSceneMapper">
+    
+    <resultMap type="OpScene" id="OpSceneResult">
+        <result property="sceneId"    column="scene_id"    />
+        <result property="sceneOrder"    column="scene_order"    />
+        <result property="sceneAddr"    column="scene_addr"    />
+        <result property="sceneCreatedate"    column="scene_createDate"    />
+        <result property="sceneCreater"    column="scene_creater"    />
+        <result property="sceneCtype"    column="scene_ctype"    />
+        <result property="sceneDesc"    column="scene_desc"    />
+        <result property="sceneImage"    column="scene_image"    />
+        <result property="sceneKeyword"    column="scene_keyWord"    />
+        <result property="sceneName"    column="scene_name"    />
+        <result property="sceneNo"    column="scene_no"    />
+        <result property="scenePid"    column="scene_pid"    />
+        <result property="sceneRank"    column="scene_rank"    />
+        <result property="sceneState"    column="scene_state"    />
+        <result property="sceneType"    column="scene_type"    />
+        <result property="sceneUrl"    column="scene_url"    />
+        <result property="sceneLatitude"    column="scene_latitude"    />
+        <result property="sceneLongitude"    column="scene_longitude"    />
+        <result property="sceneVideourl"    column="scene_videoUrl"    />
+        <result property="areaId"    column="area_id"    />
+        <result property="sceneGtype"    column="scene_gtype"    />
+    </resultMap>
+
+    <sql id="selectOpSceneVo">
+        select scene_id,area_id ,scene_gtype, scene_order, scene_addr, scene_createDate, scene_creater, scene_ctype, scene_desc, scene_image, scene_keyWord, scene_name,
+        scene_no, scene_pid, scene_rank, scene_state, scene_type, scene_url, scene_latitude, scene_longitude, scene_videoUrl from op_scene
+    </sql>
+
+    <select id="selectOpSceneList" parameterType="OpScene" resultMap="OpSceneResult">
+        <include refid="selectOpSceneVo"/>
+        <where>  
+            <if test="areaId != null "> and parent_id = #{areaId}</if>
+            <if test="sceneGtype != null  and ancestors != ''"> and ancestors = #{sceneGtype}</if>
+            <if test="sceneOrder != null "> and scene_order = #{sceneOrder}</if>
+            <if test="sceneAddr != null  and sceneAddr != ''"> and scene_addr = #{sceneAddr}</if>
+            <if test="sceneCreatedate != null "> and scene_createDate = #{sceneCreatedate}</if>
+            <if test="sceneCreater != null  and sceneCreater != ''"> and scene_creater = #{sceneCreater}</if>
+            <if test="sceneCtype != null "> and scene_ctype = #{sceneCtype}</if>
+            <if test="sceneDesc != null  and sceneDesc != ''"> and scene_desc = #{sceneDesc}</if>
+            <if test="sceneImage != null  and sceneImage != ''"> and scene_image = #{sceneImage}</if>
+            <if test="sceneKeyword != null  and sceneKeyword != ''"> and scene_keyWord = #{sceneKeyword}</if>
+            <if test="sceneName != null  and sceneName != ''"> and scene_name like concat('%', #{sceneName}, '%')</if>
+            <if test="sceneNo != null  and sceneNo != ''"> and scene_no = #{sceneNo}</if>
+            <if test="scenePid != null  and scenePid != ''"> and scene_pid = #{scenePid}</if>
+            <if test="sceneRank != null "> and scene_rank = #{sceneRank}</if>
+            <if test="sceneState != null "> and scene_state = #{sceneState}</if>
+            <if test="sceneType != null "> and scene_type = #{sceneType}</if>
+            <if test="sceneUrl != null  and sceneUrl != ''"> and scene_url = #{sceneUrl}</if>
+            <if test="sceneLatitude != null  and sceneLatitude != ''"> and scene_latitude = #{sceneLatitude}</if>
+            <if test="sceneLongitude != null  and sceneLongitude != ''"> and scene_longitude = #{sceneLongitude}</if>
+            <if test="sceneVideourl != null  and sceneVideourl != ''"> and scene_videoUrl = #{sceneVideourl}</if>
+        </where>
+    </select>
+
+    <select id="selectSceneList" parameterType="String" resultMap="OpSceneResult">
+        select d.scene_id, d.area_id, d.scene_gtype, d.scene_order, d.scene_addr, d.scene_createDate, d.scene_creater, d.scene_ctype, d.scene_desc, d.scene_image, d.scene_keyWord, d.scene_name,
+        d.scene_no, d.scene_pid, d.scene_rank, d.scene_state, d.scene_type, d.scene_url, d.scene_latitude, d.scene_longitude, d.scene_videoUrl from op_scene d
+        ,op_userinfo_scene e
+        where d.scene_id = e.scene_id
+        and d.scene_state = '1'
+        and e.user_id = #{userId}
+        order by d.scene_order
+    </select>
+
+    <select id="selectNoParentList" parameterType="String" resultMap="OpSceneResult">
+        select d.scene_id, d.area_id, d.scene_gtype, d.scene_order, d.scene_addr, d.scene_createDate, d.scene_creater, d.scene_ctype, d.scene_desc, d.scene_image, d.scene_keyWord, d.scene_name,
+        d.scene_no, d.scene_pid, d.scene_rank, d.scene_state, d.scene_type, d.scene_url, d.scene_latitude, d.scene_longitude, d.scene_videoUrl from op_scene d
+        ,op_userinfo_scene e
+        where d.scene_id = e.scene_id
+        and d.scene_state = '1'
+        and e.user_id = #{userId}
+        and d.scene_pid not in('0','1')
+        order by  d.scene_order
+    </select>
+
+
+    <select id="selectScene" parameterType="String" resultMap="OpSceneResult">
+        select d.scene_id, d.area_id, d.scene_gtype, d.scene_order, d.scene_addr, d.scene_createDate, d.scene_creater, d.scene_ctype, d.scene_desc, d.scene_image, d.scene_keyWord, d.scene_name,
+        d.scene_no, d.scene_pid, d.scene_rank, d.scene_state, d.scene_type, d.scene_url, d.scene_latitude, d.scene_longitude, d.scene_videoUrl from op_scene d
+        ,op_userinfo_scene e
+        where d.scene_id = e.scene_id
+        and d.scene_state = '1'
+        and e.user_id = #{userId}
+        and d.scene_rank = '3'
+        order by  d.scene_no
+    </select>
+
+
+
+
+
+
+
+
+
+    <select id="selectOpSceneById" parameterType="Long" resultMap="OpSceneResult">
+        <include refid="selectOpSceneVo"/>
+        where scene_id = #{sceneId}
+    </select>
+        
+    <insert id="insertOpScene" parameterType="OpScene" useGeneratedKeys="true" keyProperty="sceneId">
+        insert into op_scene
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">area_id,</if>
+            <if test="sceneGtype != null">scene_gtype,</if>
+            <if test="sceneOrder != null">scene_order,</if>
+            <if test="sceneAddr != null">scene_addr,</if>
+            <if test="sceneCreatedate != null">scene_createDate,</if>
+            <if test="sceneCreater != null">scene_creater,</if>
+            <if test="sceneCtype != null">scene_ctype,</if>
+            <if test="sceneDesc != null">scene_desc,</if>
+            <if test="sceneImage != null">scene_image,</if>
+            <if test="sceneKeyword != null">scene_keyWord,</if>
+            <if test="sceneName != null">scene_name,</if>
+            <if test="sceneNo != null">scene_no,</if>
+            <if test="scenePid != null">scene_pid,</if>
+            <if test="sceneRank != null">scene_rank,</if>
+            <if test="sceneState != null">scene_state,</if>
+            <if test="sceneType != null">scene_type,</if>
+            <if test="sceneUrl != null">scene_url,</if>
+            <if test="sceneLatitude != null">scene_latitude,</if>
+            <if test="sceneLongitude != null">scene_longitude,</if>
+            <if test="sceneVideourl != null">scene_videoUrl,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="areaId != null">#{areaId},</if>
+            <if test="sceneGtype != null">#{sceneGtype},</if>
+            <if test="sceneOrder != null">#{sceneOrder},</if>
+            <if test="sceneAddr != null">#{sceneAddr},</if>
+            <if test="sceneCreatedate != null">#{sceneCreatedate},</if>
+            <if test="sceneCreater != null">#{sceneCreater},</if>
+            <if test="sceneCtype != null">#{sceneCtype},</if>
+            <if test="sceneDesc != null">#{sceneDesc},</if>
+            <if test="sceneImage != null">#{sceneImage},</if>
+            <if test="sceneKeyword != null">#{sceneKeyword},</if>
+            <if test="sceneName != null">#{sceneName},</if>
+            <if test="sceneNo != null">#{sceneNo},</if>
+            <if test="scenePid != null">#{scenePid},</if>
+            <if test="sceneRank != null">#{sceneRank},</if>
+            <if test="sceneState != null">#{sceneState},</if>
+            <if test="sceneType != null">#{sceneType},</if>
+            <if test="sceneUrl != null">#{sceneUrl},</if>
+            <if test="sceneLatitude != null">#{sceneLatitude},</if>
+            <if test="sceneLongitude != null">#{sceneLongitude},</if>
+            <if test="sceneVideourl != null">#{sceneVideourl},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpScene" parameterType="OpScene">
+        update op_scene
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="areaId != null">parent_id = #{areaId},</if>
+            <if test="sceneGtype != null">ancestors = #{sceneGtype},</if>
+            <if test="sceneOrder != null">scene_order = #{sceneOrder},</if>
+            <if test="sceneAddr != null">scene_addr = #{sceneAddr},</if>
+            <if test="sceneCreatedate != null">scene_createDate = #{sceneCreatedate},</if>
+            <if test="sceneCreater != null">scene_creater = #{sceneCreater},</if>
+            <if test="sceneCtype != null">scene_ctype = #{sceneCtype},</if>
+            <if test="sceneDesc != null">scene_desc = #{sceneDesc},</if>
+            <if test="sceneImage != null">scene_image = #{sceneImage},</if>
+            <if test="sceneKeyword != null">scene_keyWord = #{sceneKeyword},</if>
+            <if test="sceneName != null">scene_name = #{sceneName},</if>
+            <if test="sceneNo != null">scene_no = #{sceneNo},</if>
+            <if test="scenePid != null">scene_pid = #{scenePid},</if>
+            <if test="sceneRank != null">scene_rank = #{sceneRank},</if>
+            <if test="sceneState != null">scene_state = #{sceneState},</if>
+            <if test="sceneType != null">scene_type = #{sceneType},</if>
+            <if test="sceneUrl != null">scene_url = #{sceneUrl},</if>
+            <if test="sceneLatitude != null">scene_latitude = #{sceneLatitude},</if>
+            <if test="sceneLongitude != null">scene_longitude = #{sceneLongitude},</if>
+            <if test="sceneVideourl != null">scene_videoUrl = #{sceneVideourl},</if>
+        </trim>
+        where scene_id = #{sceneId}
+    </update>
+
+    <delete id="deleteOpSceneById" parameterType="Long">
+        delete from op_scene where scene_id = #{sceneId}
+    </delete>
+
+    <delete id="deleteOpSceneByIds" parameterType="String">
+        delete from op_scene where scene_id in 
+        <foreach item="sceneId" collection="array" open="(" separator="," close=")">
+            #{sceneId}
+        </foreach>
+    </delete>
+
+</mapper>

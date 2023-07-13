@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.skylastdata.mapper.SkyLastdataMapper">
+    
+    <resultMap type="SkyLastdata" id="SkyLastdataResult">
+        <result property="id"    column="id"    />
+        <result property="boxId"    column="box_id"    />
+        <result property="boxName"    column="box_name"    />
+        <result property="variantId"    column="variant_id"    />
+        <result property="variantName"    column="variant_name"    />
+        <result property="value"    column="value"    />
+        <result property="updateTime"    column="update_time"    />
+    </resultMap>
+
+    <sql id="selectSkyLastdataVo">
+        select id, box_id, box_name, variant_id, variant_name, value, update_time from sky_lastdata
+    </sql>
+
+    <select id="selectSkyLastdataList" parameterType="SkyLastdata" resultMap="SkyLastdataResult">
+        <include refid="selectSkyLastdataVo"/>
+        <where>  
+            <if test="boxId != null  and boxId != ''"> and box_id = #{boxId}</if>
+            <if test="boxName != null  and boxName != ''"> and box_name like concat('%', #{boxName}, '%')</if>
+            <if test="variantId != null "> and variant_id = #{variantId}</if>
+            <if test="variantName != null  and variantName != ''"> and variant_name like concat('%', #{variantName}, '%')</if>
+            <if test="value != null "> and value = #{value}</if>
+        </where>
+    </select>
+    
+    <select id="selectSkyLastdataById" parameterType="Long" resultMap="SkyLastdataResult">
+        <include refid="selectSkyLastdataVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSkyLastdata" parameterType="SkyLastdata" useGeneratedKeys="true" keyProperty="id">
+        insert into sky_lastdata
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="boxId != null">box_id,</if>
+            <if test="boxName != null">box_name,</if>
+            <if test="variantId != null">variant_id,</if>
+            <if test="variantName != null">variant_name,</if>
+            <if test="value != null">value,</if>
+            <if test="updateTime != null">update_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="boxId != null">#{boxId},</if>
+            <if test="boxName != null">#{boxName},</if>
+            <if test="variantId != null">#{variantId},</if>
+            <if test="variantName != null">#{variantName},</if>
+            <if test="value != null">#{value},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSkyLastdata" parameterType="SkyLastdata">
+        update sky_lastdata
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="boxId != null">box_id = #{boxId},</if>
+            <if test="boxName != null">box_name = #{boxName},</if>
+            <if test="variantId != null">variant_id = #{variantId},</if>
+            <if test="variantName != null">variant_name = #{variantName},</if>
+            <if test="value != null">value = #{value},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSkyLastdataById" parameterType="Long">
+        delete from sky_lastdata where id = #{id}
+    </delete>
+
+    <delete id="deleteSkyLastdataByIds" parameterType="String">
+        delete from sky_lastdata where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

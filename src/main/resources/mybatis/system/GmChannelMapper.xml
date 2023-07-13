@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.channel.mapper.GmChannelMapper">
+
+    <resultMap type="GmChannel" id="GmChannelResult">
+        <result property="chId" column="ch_id"/>
+        <result property="chChlno" column="ch_chlNo"/>
+        <result property="chCorrcyc" column="ch_corrCyc"/>
+        <result property="chCorrformula" column="ch_corrFormula"/>
+        <result property="chCorrunit" column="ch_corrUnit"/>
+        <result property="chCratemax" column="ch_crateMax"/>
+        <result property="chDectdig" column="ch_dectDig"/>
+        <result property="chMax" column="ch_max"/>
+        <result property="chMemoryperiod" column="ch_memoryPeriod"/>
+        <result property="chMin" column="ch_min"/>
+        <result property="chName" column="ch_name"/>
+        <result property="chNo" column="ch_no"/>
+        <result property="chOfferser" column="ch_offerSer"/>
+        <result property="chProcesstyle" column="ch_procesStyle"/>
+        <result property="chState" column="ch_state"/>
+        <result property="chUnit" column="ch_unit"/>
+        <result property="chtypeId" column="chtype_id"/>
+        <result property="devCollectid" column="dev_collectId"/>
+        <result property="devSensorid" column="dev_sensorId"/>
+        <result property="sceneId" column="scene_id"/>
+        <result property="chSeatNo" column="ch_seat_no"/>
+        <result property="chDepth" column="ch_depth"/>
+        <result property="chDatetype" column="ch_dateType"/>
+        <result property="chCratemin" column="ch_crateMin"/>
+    </resultMap>
+
+    <resultMap id="ChannelAvgVO" type="com.ruoyi.project.system.vo.ChannelAvgVO">
+        <result property="chName" column="chName"/>
+        <result property="chtypeNo" column="chtypeNo"/>
+        <result property="avgCorrvalue" column="avgCorrvalue"/>
+        <result property="chCorrunit" column="chCorrunit"/>
+        <result property="hidaRecordTime" column="hidaRecordTime"/>
+    </resultMap>
+
+    <resultMap id="HistoryChannelVo" type="com.ruoyi.project.system.vo.HistoryChannelVo">
+        <result property="chName" column="chName"/>
+        <result property="hidaRecordTime" column="hidaRecordTime"/>
+        <result property="chNo" column="chNo"/>
+        <result property="chUnit" column="chUnit"/>
+        <result property="hidaCorrValue" column="hidaCorrValue"/>
+    </resultMap>
+
+    <sql id="selectGmChannelVo">
+        select ch_id, ch_chlNo, ch_corrCyc, ch_corrFormula, ch_corrUnit, ch_crateMax, ch_dectDig, ch_max, ch_memoryPeriod, ch_min, ch_name, ch_no, ch_offerSer, ch_procesStyle, ch_state, ch_unit, chtype_id, dev_collectId, dev_sensorId, scene_id, ch_seat_no, ch_depth, ch_dateType, ch_crateMin from gm_channel
+    </sql>
+
+    <select id="selectGmChannelList" parameterType="GmChannel" resultMap="GmChannelResult">
+        <include refid="selectGmChannelVo"/>
+        <where>
+            <if test="chChlno != null ">and ch_chlNo = #{chChlno}</if>
+            <if test="chCorrcyc != null ">and ch_corrCyc = #{chCorrcyc}</if>
+            <if test="chCorrformula != null  and chCorrformula != ''">and ch_corrFormula = #{chCorrformula}</if>
+            <if test="chCorrunit != null  and chCorrunit != ''">and ch_corrUnit = #{chCorrunit}</if>
+            <if test="chCratemax != null ">and ch_crateMax = #{chCratemax}</if>
+            <if test="chDectdig != null ">and ch_dectDig = #{chDectdig}</if>
+            <if test="chMax != null ">and ch_max = #{chMax}</if>
+            <if test="chMemoryperiod != null ">and ch_memoryPeriod = #{chMemoryperiod}</if>
+            <if test="chMin != null ">and ch_min = #{chMin}</if>
+            <if test="chName != null  and chName != ''">and ch_name like concat('%', #{chName}, '%')</if>
+            <if test="chNo != null  and chNo != ''">and ch_no = #{chNo}</if>
+            <if test="chOfferser != null ">and ch_offerSer = #{chOfferser}</if>
+            <if test="chProcesstyle != null ">and ch_procesStyle = #{chProcesstyle}</if>
+            <if test="chState != null ">and ch_state = #{chState}</if>
+            <if test="chUnit != null  and chUnit != ''">and ch_unit = #{chUnit}</if>
+            <if test="chtypeId != null  and chtypeId != ''">and chtype_id = #{chtypeId}</if>
+            <if test="devCollectid != null  and devCollectid != ''">and dev_collectId = #{devCollectid}</if>
+            <if test="devSensorid != null  and devSensorid != ''">and dev_sensorId = #{devSensorid}</if>
+            <if test="sceneId != null  and sceneId != ''">and scene_id = #{sceneId}</if>
+            <if test="chSeatNo != null  and chSeatNo != ''">and ch_seat_no = #{chSeatNo}</if>
+            <if test="chDepth != null  and chDepth != ''">and ch_depth = #{chDepth}</if>
+            <if test="chDatetype != null ">and ch_dateType = #{chDatetype}</if>
+            <if test="chCratemin != null ">and ch_crateMin = #{chCratemin}</if>
+        </where>
+    </select>
+
+
+    <select id="selectChanneVoList" parameterType="String" resultMap="ChannelAvgVO">
+        SELECT
+        gm_channel.ch_id chId,
+        gm_channel.ch_name chName,
+        op_channeltype.chtype_no chtypeNo,
+        gm_latestdata.hida_corrValue avgCorrvalue,
+        gm_channel.ch_corrUnit  chCorrunit,
+		gm_latestdata.hida_record_time hidaRecordTime
+    FROM
+        gm_channel,
+        op_channeltype,
+        gm_latestdata
+    where
+        gm_channel.scene_id=#{sceneId}
+        and gm_channel.chtype_id=op_channeltype.chtype_id
+        and gm_latestdata.ch_id=gm_channel.ch_id
+        and gm_latestdata.hida_corrValue is not null
+        and gm_channel.ch_offerSer=1
+        and gm_channel.ch_state=1
+    </select>
+
+    <select id="selectChanneVoListByChannelId" parameterType="String" resultMap="ChannelAvgVO">
+        SELECT
+        gm_channel.ch_id chId,
+        gm_channel.ch_name chName,
+        op_channeltype.chtype_no chtypeNo,
+        gm_latestdata.hida_corrValue avgCorrvalue,
+        gm_channel.ch_corrUnit  chCorrunit,
+		gm_latestdata.hida_record_time hidaRecordTime
+    FROM
+        gm_channel,
+        op_channeltype,
+        gm_latestdata
+    where
+        gm_latestdata.ch_id=#{channelId}
+        and gm_channel.chtype_id=op_channeltype.chtype_id
+        and gm_latestdata.ch_id=gm_channel.ch_id
+        and gm_latestdata.hida_corrValue is not null
+        and gm_channel.ch_offerSer=1
+        and gm_channel.ch_state=1
+    </select>
+
+
+    <select id="selectHistoryChannelVoList" resultMap="HistoryChannelVo">
+    select ch_no chNo,
+    ch_name chName,
+    hida_corrValue hidaCorrValue,
+    ch_unit chUnit,
+    hida_record_time hidaRecordTime
+    from
+    gm_historydata his,
+    gm_channel channel
+    where his.ch_id= channel.ch_id
+        and channel.ch_id in
+        <foreach collection="channelArr" open="(" separator="," close=")" item="channelArr">
+            #{channelArr}
+        </foreach>
+        and
+        his.hida_record_time >= #{startTime}
+        and
+        his.hida_record_time &lt;= #{endTime}
+    </select>
+
+    <select id="selectGmChannelById" parameterType="String" resultMap="GmChannelResult">
+        <include refid="selectGmChannelVo"/>
+        where ch_id = #{chId}
+    </select>
+
+    <insert id="insertGmChannel" parameterType="GmChannel">
+        insert into gm_channel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="chId != null">ch_id,</if>
+            <if test="chChlno != null">ch_chlNo,</if>
+            <if test="chCorrcyc != null">ch_corrCyc,</if>
+            <if test="chCorrformula != null">ch_corrFormula,</if>
+            <if test="chCorrunit != null">ch_corrUnit,</if>
+            <if test="chCratemax != null">ch_crateMax,</if>
+            <if test="chDectdig != null">ch_dectDig,</if>
+            <if test="chMax != null">ch_max,</if>
+            <if test="chMemoryperiod != null">ch_memoryPeriod,</if>
+            <if test="chMin != null">ch_min,</if>
+            <if test="chName != null">ch_name,</if>
+            <if test="chNo != null">ch_no,</if>
+            <if test="chOfferser != null">ch_offerSer,</if>
+            <if test="chProcesstyle != null">ch_procesStyle,</if>
+            <if test="chState != null">ch_state,</if>
+            <if test="chUnit != null">ch_unit,</if>
+            <if test="chtypeId != null">chtype_id,</if>
+            <if test="devCollectid != null">dev_collectId,</if>
+            <if test="devSensorid != null">dev_sensorId,</if>
+            <if test="sceneId != null">scene_id,</if>
+            <if test="chSeatNo != null">ch_seat_no,</if>
+            <if test="chDepth != null">ch_depth,</if>
+            <if test="chDatetype != null">ch_dateType,</if>
+            <if test="chCratemin != null">ch_crateMin,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="chId != null">#{chId},</if>
+            <if test="chChlno != null">#{chChlno},</if>
+            <if test="chCorrcyc != null">#{chCorrcyc},</if>
+            <if test="chCorrformula != null">#{chCorrformula},</if>
+            <if test="chCorrunit != null">#{chCorrunit},</if>
+            <if test="chCratemax != null">#{chCratemax},</if>
+            <if test="chDectdig != null">#{chDectdig},</if>
+            <if test="chMax != null">#{chMax},</if>
+            <if test="chMemoryperiod != null">#{chMemoryperiod},</if>
+            <if test="chMin != null">#{chMin},</if>
+            <if test="chName != null">#{chName},</if>
+            <if test="chNo != null">#{chNo},</if>
+            <if test="chOfferser != null">#{chOfferser},</if>
+            <if test="chProcesstyle != null">#{chProcesstyle},</if>
+            <if test="chState != null">#{chState},</if>
+            <if test="chUnit != null">#{chUnit},</if>
+            <if test="chtypeId != null">#{chtypeId},</if>
+            <if test="devCollectid != null">#{devCollectid},</if>
+            <if test="devSensorid != null">#{devSensorid},</if>
+            <if test="sceneId != null">#{sceneId},</if>
+            <if test="chSeatNo != null">#{chSeatNo},</if>
+            <if test="chDepth != null">#{chDepth},</if>
+            <if test="chDatetype != null">#{chDatetype},</if>
+            <if test="chCratemin != null">#{chCratemin},</if>
+        </trim>
+    </insert>
+
+    <update id="updateGmChannel" parameterType="GmChannel">
+        update gm_channel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chChlno != null">ch_chlNo = #{chChlno},</if>
+            <if test="chCorrcyc != null">ch_corrCyc = #{chCorrcyc},</if>
+            <if test="chCorrformula != null">ch_corrFormula = #{chCorrformula},</if>
+            <if test="chCorrunit != null">ch_corrUnit = #{chCorrunit},</if>
+            <if test="chCratemax != null">ch_crateMax = #{chCratemax},</if>
+            <if test="chDectdig != null">ch_dectDig = #{chDectdig},</if>
+            <if test="chMax != null">ch_max = #{chMax},</if>
+            <if test="chMemoryperiod != null">ch_memoryPeriod = #{chMemoryperiod},</if>
+            <if test="chMin != null">ch_min = #{chMin},</if>
+            <if test="chName != null">ch_name = #{chName},</if>
+            <if test="chNo != null">ch_no = #{chNo},</if>
+            <if test="chOfferser != null">ch_offerSer = #{chOfferser},</if>
+            <if test="chProcesstyle != null">ch_procesStyle = #{chProcesstyle},</if>
+            <if test="chState != null">ch_state = #{chState},</if>
+            <if test="chUnit != null">ch_unit = #{chUnit},</if>
+            <if test="chtypeId != null">chtype_id = #{chtypeId},</if>
+            <if test="devCollectid != null">dev_collectId = #{devCollectid},</if>
+            <if test="devSensorid != null">dev_sensorId = #{devSensorid},</if>
+            <if test="sceneId != null">scene_id = #{sceneId},</if>
+            <if test="chSeatNo != null">ch_seat_no = #{chSeatNo},</if>
+            <if test="chDepth != null">ch_depth = #{chDepth},</if>
+            <if test="chDatetype != null">ch_dateType = #{chDatetype},</if>
+            <if test="chCratemin != null">ch_crateMin = #{chCratemin},</if>
+        </trim>
+        where ch_id = #{chId}
+    </update>
+
+    <delete id="deleteGmChannelById" parameterType="String">
+        delete from gm_channel where ch_id = #{chId}
+    </delete>
+
+    <delete id="deleteGmChannelByIds" parameterType="String">
+        delete from gm_channel where ch_id in
+        <foreach item="chId" collection="array" open="(" separator="," close=")">
+            #{chId}
+        </foreach>
+    </delete>
+
+</mapper>

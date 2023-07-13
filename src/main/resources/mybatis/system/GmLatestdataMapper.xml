@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.latestdata.mapper.GmLatestdataMapper">
+    
+    <resultMap type="GmLatestdata" id="GmLatestdataResult">
+        <result property="hidaId"    column="hida_id"    />
+        <result property="chId"    column="ch_id"    />
+        <result property="hidaOrigvalue"    column="hida_origValue"    />
+        <result property="hidaCorrvalue"    column="hida_corrValue"    />
+        <result property="hidaReporttime"    column="hida_reportTime"    />
+        <result property="hidaRecordTime"    column="hida_record_time"    />
+        <result property="hidaDatequality"    column="hida_dateQuality"    />
+    </resultMap>
+
+    <sql id="selectGmLatestdataVo">
+        select hida_id, ch_id, hida_origValue, hida_corrValue, hida_reportTime, hida_record_time, hida_dateQuality from gm_latestdata
+    </sql>
+
+    <select id="selectGmLatestdataList" parameterType="GmLatestdata" resultMap="GmLatestdataResult">
+        <include refid="selectGmLatestdataVo"/>
+        <where>  
+            <if test="chId != null  and chId != ''"> and ch_id = #{chId}</if>
+            <if test="hidaOrigvalue != null "> and hida_origValue = #{hidaOrigvalue}</if>
+            <if test="hidaCorrvalue != null "> and hida_corrValue = #{hidaCorrvalue}</if>
+            <if test="hidaReporttime != null "> and hida_reportTime = #{hidaReporttime}</if>
+            <if test="hidaRecordTime != null "> and hida_record_time = #{hidaRecordTime}</if>
+            <if test="hidaDatequality != null "> and hida_dateQuality = #{hidaDatequality}</if>
+        </where>
+    </select>
+    
+    <select id="selectGmLatestdataById" parameterType="String" resultMap="GmLatestdataResult">
+        <include refid="selectGmLatestdataVo"/>
+        where hida_id = #{hidaId}
+    </select>
+        
+    <insert id="insertGmLatestdata" parameterType="GmLatestdata">
+        insert into gm_latestdata
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hidaId != null">hida_id,</if>
+            <if test="chId != null">ch_id,</if>
+            <if test="hidaOrigvalue != null">hida_origValue,</if>
+            <if test="hidaCorrvalue != null">hida_corrValue,</if>
+            <if test="hidaReporttime != null">hida_reportTime,</if>
+            <if test="hidaRecordTime != null">hida_record_time,</if>
+            <if test="hidaDatequality != null">hida_dateQuality,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hidaId != null">#{hidaId},</if>
+            <if test="chId != null">#{chId},</if>
+            <if test="hidaOrigvalue != null">#{hidaOrigvalue},</if>
+            <if test="hidaCorrvalue != null">#{hidaCorrvalue},</if>
+            <if test="hidaReporttime != null">#{hidaReporttime},</if>
+            <if test="hidaRecordTime != null">#{hidaRecordTime},</if>
+            <if test="hidaDatequality != null">#{hidaDatequality},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGmLatestdata" parameterType="GmLatestdata">
+        update gm_latestdata
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chId != null">ch_id = #{chId},</if>
+            <if test="hidaOrigvalue != null">hida_origValue = #{hidaOrigvalue},</if>
+            <if test="hidaCorrvalue != null">hida_corrValue = #{hidaCorrvalue},</if>
+            <if test="hidaReporttime != null">hida_reportTime = #{hidaReporttime},</if>
+            <if test="hidaRecordTime != null">hida_record_time = #{hidaRecordTime},</if>
+            <if test="hidaDatequality != null">hida_dateQuality = #{hidaDatequality},</if>
+        </trim>
+        where hida_id = #{hidaId}
+    </update>
+
+    <delete id="deleteGmLatestdataById" parameterType="String">
+        delete from gm_latestdata where hida_id = #{hidaId}
+    </delete>
+
+    <delete id="deleteGmLatestdataByIds" parameterType="String">
+        delete from gm_latestdata where hida_id in 
+        <foreach item="hidaId" collection="array" open="(" separator="," close=")">
+            #{hidaId}
+        </foreach>
+    </delete>
+
+</mapper>

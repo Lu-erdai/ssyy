@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.autoctrlfactor.mapper.OpAutoctrlfactorMapper">
+    
+    <resultMap type="OpAutoctrlfactor" id="OpAutoctrlfactorResult">
+        <result property="acfId"    column="acf_id"    />
+        <result property="accId"    column="acc_id"    />
+        <result property="chId"    column="ch_id"    />
+        <result property="accHandle"    column="acc_handle"    />
+        <result property="accCondition"    column="acc_condition"    />
+        <result property="accTrigger"    column="acc_trigger"    />
+    </resultMap>
+
+    <sql id="selectOpAutoctrlfactorVo">
+        select acf_id, acc_id, ch_id, acc_handle, acc_condition, acc_trigger from op_autoctrlfactor
+    </sql>
+
+    <select id="selectOpAutoctrlfactorList" parameterType="OpAutoctrlfactor" resultMap="OpAutoctrlfactorResult">
+        <include refid="selectOpAutoctrlfactorVo"/>
+        <where>  
+            <if test="accId != null  and accId != ''"> and acc_id = #{accId}</if>
+            <if test="chId != null  and chId != ''"> and ch_id = #{chId}</if>
+            <if test="accHandle != null "> and acc_handle = #{accHandle}</if>
+            <if test="accCondition != null "> and acc_condition = #{accCondition}</if>
+            <if test="accTrigger != null "> and acc_trigger = #{accTrigger}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpAutoctrlfactorById" parameterType="Long" resultMap="OpAutoctrlfactorResult">
+        <include refid="selectOpAutoctrlfactorVo"/>
+        where acf_id = #{acfId}
+    </select>
+        
+    <insert id="insertOpAutoctrlfactor" parameterType="OpAutoctrlfactor" useGeneratedKeys="true" keyProperty="acfId">
+        insert into op_autoctrlfactor
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="accId != null">acc_id,</if>
+            <if test="chId != null">ch_id,</if>
+            <if test="accHandle != null">acc_handle,</if>
+            <if test="accCondition != null">acc_condition,</if>
+            <if test="accTrigger != null">acc_trigger,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="accId != null">#{accId},</if>
+            <if test="chId != null">#{chId},</if>
+            <if test="accHandle != null">#{accHandle},</if>
+            <if test="accCondition != null">#{accCondition},</if>
+            <if test="accTrigger != null">#{accTrigger},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpAutoctrlfactor" parameterType="OpAutoctrlfactor">
+        update op_autoctrlfactor
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="accId != null">acc_id = #{accId},</if>
+            <if test="chId != null">ch_id = #{chId},</if>
+            <if test="accHandle != null">acc_handle = #{accHandle},</if>
+            <if test="accCondition != null">acc_condition = #{accCondition},</if>
+            <if test="accTrigger != null">acc_trigger = #{accTrigger},</if>
+        </trim>
+        where acf_id = #{acfId}
+    </update>
+
+    <delete id="deleteOpAutoctrlfactorById" parameterType="Long">
+        delete from op_autoctrlfactor where acf_id = #{acfId}
+    </delete>
+
+    <delete id="deleteOpAutoctrlfactorByIds" parameterType="String">
+        delete from op_autoctrlfactor where acf_id in 
+        <foreach item="acfId" collection="array" open="(" separator="," close=")">
+            #{acfId}
+        </foreach>
+    </delete>
+
+
+    <delete id="deleteOpAutoctrlfactorByAccIdAndAcfId">
+        delete from op_autoctrlfactor where acc_id = #{accId} and acf_id = #{acfId}
+    </delete>
+
+
+</mapper>

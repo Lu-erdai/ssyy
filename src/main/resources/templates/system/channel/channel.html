@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <th:block th:include="include :: header('【请填写功能名称】列表')" />
+</head>
+<body class="gray-bg">
+     <div class="container-div">
+        <div class="row">
+            <div class="col-sm-12 search-collapse">
+                <form id="formId">
+                    <div class="select-list">
+                        <ul>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chChlno"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chCorrcyc"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chCorrformula"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chCorrunit"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chCratemax"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chDectdig"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chMax"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chMemoryperiod"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chMin"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chName"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chNo"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chOfferser"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chProcesstyle"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chState"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chUnit"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chtypeId"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="devCollectid"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="devSensorid"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="sceneId"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chSeatNo"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chDepth"/>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <select name="chDatetype">
+                                    <option value="">所有</option>
+                                    <option value="-1">代码生成请选择字典属性</option>
+                                </select>
+                            </li>
+                            <li>
+                                <label>${comment}：</label>
+                                <input type="text" name="chCratemin"/>
+                            </li>
+                            <li>
+                                <a class="btn btn-primary btn-rounded btn-sm" onclick="$.table.search()"><i class="fa fa-search"></i>&nbsp;搜索</a>
+                                <a class="btn btn-warning btn-rounded btn-sm" onclick="$.form.reset()"><i class="fa fa-refresh"></i>&nbsp;重置</a>
+                            </li>
+                        </ul>
+                    </div>
+                </form>
+            </div>
+
+            <div class="btn-group-sm" id="toolbar" role="group">
+                <a class="btn btn-success" onclick="$.operate.add()" shiro:hasPermission="system:channel:add">
+                    <i class="fa fa-plus"></i> 添加
+                </a>
+                <a class="btn btn-primary single disabled" onclick="$.operate.edit()" shiro:hasPermission="system:channel:edit">
+                    <i class="fa fa-edit"></i> 修改
+                </a>
+                <a class="btn btn-danger multiple disabled" onclick="$.operate.removeAll()" shiro:hasPermission="system:channel:remove">
+                    <i class="fa fa-remove"></i> 删除
+                </a>
+                <a class="btn btn-warning" onclick="$.table.exportExcel()" shiro:hasPermission="system:channel:export">
+                    <i class="fa fa-download"></i> 导出
+                </a>
+            </div>
+            <div class="col-sm-12 select-table table-striped">
+                <table id="bootstrap-table"></table>
+            </div>
+        </div>
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var editFlag = [[${@permission.hasPermi('system:channel:edit')}]];
+        var removeFlag = [[${@permission.hasPermi('system:channel:remove')}]];
+        var prefix = ctx + "system/channel";
+
+        $(function() {
+            var options = {
+                url: prefix + "/list",
+                createUrl: prefix + "/add",
+                updateUrl: prefix + "/edit/{id}",
+                removeUrl: prefix + "/remove",
+                exportUrl: prefix + "/export",
+                modalName: "【请填写功能名称】",
+                columns: [{
+                    checkbox: true
+                },
+                {
+                    field: 'chId',
+                    title: '${comment}',
+                    visible: false
+                },
+                {
+                    field: 'chChlno',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chCorrcyc',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chCorrformula',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chCorrunit',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chCratemax',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chDectdig',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chMax',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chMemoryperiod',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chMin',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chName',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chNo',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chOfferser',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chProcesstyle',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chState',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chUnit',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chtypeId',
+                    title: '${comment}'
+                },
+                {
+                    field: 'devCollectid',
+                    title: '${comment}'
+                },
+                {
+                    field: 'devSensorid',
+                    title: '${comment}'
+                },
+                {
+                    field: 'sceneId',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chSeatNo',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chDepth',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chDatetype',
+                    title: '${comment}'
+                },
+                {
+                    field: 'chCratemin',
+                    title: '${comment}'
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function(value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="javascript:void(0)" onclick="$.operate.edit(\'' + row.chId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        actions.push('<a class="btn btn-danger btn-xs ' + removeFlag + '" href="javascript:void(0)" onclick="$.operate.remove(\'' + row.chId + '\')"><i class="fa fa-remove"></i>删除</a>');
+                        return actions.join('');
+                    }
+                }]
+            };
+            $.table.init(options);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.alarmconfig.mapper.OpAlarmconfigMapper">
+    
+    <resultMap type="OpAlarmconfig" id="OpAlarmconfigResult">
+        <result property="id"    column="id"    />
+        <result property="alEmail"    column="al_email"    />
+        <result property="alEnable"    column="al_enable"    />
+        <result property="alInterval"    column="al_interval"    />
+        <result property="alNoticetype"    column="al_noticeType"    />
+        <result property="alPhone"    column="al_phone"    />
+        <result property="sceneName"    column="scene_name"    />
+        <result property="sceneId"    column="scene_id"    />
+    </resultMap>
+
+    <sql id="selectOpAlarmconfigVo">
+        select id, al_email, al_enable, al_interval, al_noticeType, al_phone, scene_name, scene_id from op_alarmconfig
+    </sql>
+
+    <select id="selectOpAlarmconfigList" parameterType="OpAlarmconfig" resultMap="OpAlarmconfigResult">
+        <include refid="selectOpAlarmconfigVo"/>
+        <where>  
+            <if test="alEmail != null  and alEmail != ''"> and al_email = #{alEmail}</if>
+            <if test="alEnable != null "> and al_enable = #{alEnable}</if>
+            <if test="alInterval != null "> and al_interval = #{alInterval}</if>
+            <if test="alNoticetype != null "> and al_noticeType = #{alNoticetype}</if>
+            <if test="alPhone != null  and alPhone != ''"> and al_phone = #{alPhone}</if>
+            <if test="sceneName != null  and sceneName != ''"> and scene_name like concat('%', #{sceneName}, '%')</if>
+            <if test="sceneId != null  and sceneId != ''"> and scene_id = #{sceneId}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpAlarmconfigById" parameterType="String" resultMap="OpAlarmconfigResult">
+        <include refid="selectOpAlarmconfigVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOpAlarmconfig" parameterType="OpAlarmconfig">
+        insert into op_alarmconfig
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="alEmail != null">al_email,</if>
+            <if test="alEnable != null">al_enable,</if>
+            <if test="alInterval != null">al_interval,</if>
+            <if test="alNoticetype != null">al_noticeType,</if>
+            <if test="alPhone != null">al_phone,</if>
+            <if test="sceneName != null">scene_name,</if>
+            <if test="sceneId != null">scene_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="alEmail != null">#{alEmail},</if>
+            <if test="alEnable != null">#{alEnable},</if>
+            <if test="alInterval != null">#{alInterval},</if>
+            <if test="alNoticetype != null">#{alNoticetype},</if>
+            <if test="alPhone != null">#{alPhone},</if>
+            <if test="sceneName != null">#{sceneName},</if>
+            <if test="sceneId != null">#{sceneId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpAlarmconfig" parameterType="OpAlarmconfig">
+        update op_alarmconfig
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="alEmail != null">al_email = #{alEmail},</if>
+            <if test="alEnable != null">al_enable = #{alEnable},</if>
+            <if test="alInterval != null">al_interval = #{alInterval},</if>
+            <if test="alNoticetype != null">al_noticeType = #{alNoticetype},</if>
+            <if test="alPhone != null">al_phone = #{alPhone},</if>
+            <if test="sceneName != null">scene_name = #{sceneName},</if>
+            <if test="sceneId != null">scene_id = #{sceneId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOpAlarmconfigById" parameterType="String">
+        delete from op_alarmconfig where id = #{id}
+    </delete>
+
+    <delete id="deleteOpAlarmconfigByIds" parameterType="String">
+        delete from op_alarmconfig where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

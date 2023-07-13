@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.greenhouse.mapper.ProGreenhouseMapper">
+    
+    <resultMap type="ProGreenhouse" id="ProGreenhouseResult">
+        <result property="greId"    column="gre_id"    />
+        <result property="greDo"    column="gre_do"    />
+        <result property="greDoyj"    column="gre_doyj"    />
+        <result property="greGreenhousename"    column="gre_greenhouseName"    />
+        <result property="greGreenhouseno"    column="gre_greenhouseNo"    />
+        <result property="grePhone"    column="gre_phone"    />
+        <result property="grePlantspecies"    column="gre_plantSpecies"    />
+        <result property="grePlanttime"    column="gre_plantTime"    />
+        <result property="greProductionstage"    column="gre_productionStage"    />
+        <result property="greState"    column="gre_state"    />
+        <result property="greUsername"    column="gre_userName"    />
+        <result property="dectId"    column="dect_id"    />
+        <result property="sceneId"    column="scene_id"    />
+    </resultMap>
+
+    <sql id="selectProGreenhouseVo">
+        select gre_id, gre_do, gre_doyj, gre_greenhouseName, gre_greenhouseNo, gre_phone, gre_plantSpecies, gre_plantTime, gre_productionStage, gre_state, gre_userName, dect_id, scene_id from pro_greenhouse
+    </sql>
+
+    <select id="selectProGreenhouseList" parameterType="ProGreenhouse" resultMap="ProGreenhouseResult">
+        <include refid="selectProGreenhouseVo"/>
+        <where>  
+            <if test="greDo != null "> and gre_do = #{greDo}</if>
+            <if test="greDoyj != null "> and gre_doyj = #{greDoyj}</if>
+            <if test="greGreenhousename != null  and greGreenhousename != ''"> and gre_greenhouseName like concat('%', #{greGreenhousename}, '%')</if>
+            <if test="greGreenhouseno != null  and greGreenhouseno != ''"> and gre_greenhouseNo = #{greGreenhouseno}</if>
+            <if test="grePhone != null  and grePhone != ''"> and gre_phone = #{grePhone}</if>
+            <if test="grePlantspecies != null  and grePlantspecies != ''"> and gre_plantSpecies = #{grePlantspecies}</if>
+            <if test="grePlanttime != null "> and gre_plantTime = #{grePlanttime}</if>
+            <if test="greProductionstage != null  and greProductionstage != ''"> and gre_productionStage = #{greProductionstage}</if>
+            <if test="greState != null "> and gre_state = #{greState}</if>
+            <if test="greUsername != null  and greUsername != ''"> and gre_userName like concat('%', #{greUsername}, '%')</if>
+            <if test="dectId != null  and dectId != ''"> and dect_id = #{dectId}</if>
+            <if test="sceneId != null  and sceneId != ''"> and scene_id = #{sceneId}</if>
+        </where>
+    </select>
+    
+    <select id="selectProGreenhouseById" parameterType="String" resultMap="ProGreenhouseResult">
+        <include refid="selectProGreenhouseVo"/>
+        where gre_id = #{greId}
+    </select>
+        
+    <insert id="insertProGreenhouse" parameterType="ProGreenhouse">
+        insert into pro_greenhouse
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="greId != null">gre_id,</if>
+            <if test="greDo != null">gre_do,</if>
+            <if test="greDoyj != null">gre_doyj,</if>
+            <if test="greGreenhousename != null">gre_greenhouseName,</if>
+            <if test="greGreenhouseno != null">gre_greenhouseNo,</if>
+            <if test="grePhone != null">gre_phone,</if>
+            <if test="grePlantspecies != null">gre_plantSpecies,</if>
+            <if test="grePlanttime != null">gre_plantTime,</if>
+            <if test="greProductionstage != null">gre_productionStage,</if>
+            <if test="greState != null">gre_state,</if>
+            <if test="greUsername != null">gre_userName,</if>
+            <if test="dectId != null">dect_id,</if>
+            <if test="sceneId != null">scene_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="greId != null">#{greId},</if>
+            <if test="greDo != null">#{greDo},</if>
+            <if test="greDoyj != null">#{greDoyj},</if>
+            <if test="greGreenhousename != null">#{greGreenhousename},</if>
+            <if test="greGreenhouseno != null">#{greGreenhouseno},</if>
+            <if test="grePhone != null">#{grePhone},</if>
+            <if test="grePlantspecies != null">#{grePlantspecies},</if>
+            <if test="grePlanttime != null">#{grePlanttime},</if>
+            <if test="greProductionstage != null">#{greProductionstage},</if>
+            <if test="greState != null">#{greState},</if>
+            <if test="greUsername != null">#{greUsername},</if>
+            <if test="dectId != null">#{dectId},</if>
+            <if test="sceneId != null">#{sceneId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateProGreenhouse" parameterType="ProGreenhouse">
+        update pro_greenhouse
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="greDo != null">gre_do = #{greDo},</if>
+            <if test="greDoyj != null">gre_doyj = #{greDoyj},</if>
+            <if test="greGreenhousename != null">gre_greenhouseName = #{greGreenhousename},</if>
+            <if test="greGreenhouseno != null">gre_greenhouseNo = #{greGreenhouseno},</if>
+            <if test="grePhone != null">gre_phone = #{grePhone},</if>
+            <if test="grePlantspecies != null">gre_plantSpecies = #{grePlantspecies},</if>
+            <if test="grePlanttime != null">gre_plantTime = #{grePlanttime},</if>
+            <if test="greProductionstage != null">gre_productionStage = #{greProductionstage},</if>
+            <if test="greState != null">gre_state = #{greState},</if>
+            <if test="greUsername != null">gre_userName = #{greUsername},</if>
+            <if test="dectId != null">dect_id = #{dectId},</if>
+            <if test="sceneId != null">scene_id = #{sceneId},</if>
+        </trim>
+        where gre_id = #{greId}
+    </update>
+
+    <delete id="deleteProGreenhouseById" parameterType="String">
+        delete from pro_greenhouse where gre_id = #{greId}
+    </delete>
+
+    <delete id="deleteProGreenhouseByIds" parameterType="String">
+        delete from pro_greenhouse where gre_id in 
+        <foreach item="greId" collection="array" open="(" separator="," close=")">
+            #{greId}
+        </foreach>
+    </delete>
+
+</mapper>

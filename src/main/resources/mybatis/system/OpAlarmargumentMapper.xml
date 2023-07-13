@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.alarmargument.mapper.OpAlarmargumentMapper">
+    
+    <resultMap type="OpAlarmargument" id="OpAlarmargumentResult">
+        <result property="id"    column="id"    />
+        <result property="chName"    column="ch_name"    />
+        <result property="alEnable"    column="al_enable"    />
+        <result property="alMax"    column="al_max"    />
+        <result property="alMin"    column="al_min"    />
+        <result property="chId"    column="ch_id"    />
+        <result property="sceneId"    column="scene_id"    />
+    </resultMap>
+
+    <sql id="selectOpAlarmargumentVo">
+        select id, ch_name, al_enable, al_max, al_min, ch_id, scene_id from op_alarmargument
+    </sql>
+
+    <select id="selectOpAlarmargumentList" parameterType="OpAlarmargument" resultMap="OpAlarmargumentResult">
+        <include refid="selectOpAlarmargumentVo"/>
+        <where>  
+            <if test="chName != null  and chName != ''"> and ch_name like concat('%', #{chName}, '%')</if>
+            <if test="alEnable != null "> and al_enable = #{alEnable}</if>
+            <if test="alMax != null "> and al_max = #{alMax}</if>
+            <if test="alMin != null "> and al_min = #{alMin}</if>
+            <if test="chId != null  and chId != ''"> and ch_id = #{chId}</if>
+            <if test="sceneId != null  and sceneId != ''"> and scene_id = #{sceneId}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpAlarmargumentById" parameterType="String" resultMap="OpAlarmargumentResult">
+        <include refid="selectOpAlarmargumentVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertOpAlarmargument" parameterType="OpAlarmargument">
+        insert into op_alarmargument
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="chName != null">ch_name,</if>
+            <if test="alEnable != null">al_enable,</if>
+            <if test="alMax != null">al_max,</if>
+            <if test="alMin != null">al_min,</if>
+            <if test="chId != null">ch_id,</if>
+            <if test="sceneId != null">scene_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="chName != null">#{chName},</if>
+            <if test="alEnable != null">#{alEnable},</if>
+            <if test="alMax != null">#{alMax},</if>
+            <if test="alMin != null">#{alMin},</if>
+            <if test="chId != null">#{chId},</if>
+            <if test="sceneId != null">#{sceneId},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpAlarmargument" parameterType="OpAlarmargument">
+        update op_alarmargument
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="chName != null">ch_name = #{chName},</if>
+            <if test="alEnable != null">al_enable = #{alEnable},</if>
+            <if test="alMax != null">al_max = #{alMax},</if>
+            <if test="alMin != null">al_min = #{alMin},</if>
+            <if test="chId != null">ch_id = #{chId},</if>
+            <if test="sceneId != null">scene_id = #{sceneId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteOpAlarmargumentById" parameterType="String">
+        delete from op_alarmargument where id = #{id}
+    </delete>
+
+    <delete id="deleteOpAlarmargumentByIds" parameterType="String">
+        delete from op_alarmargument where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

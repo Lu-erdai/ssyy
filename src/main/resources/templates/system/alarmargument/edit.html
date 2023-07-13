@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('修改报警配置参数')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-alarmargument-edit" th:object="${opAlarmargument}">
+            <input name="id" th:field="*{id}" type="hidden">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">通道名称：</label>
+                <div class="col-sm-8">
+                    <input name="chName" th:field="*{chName}" class="form-control" type="text" readonly="readonly">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">是否开启：</label>
+                <div class="col-sm-8">
+                    <label class="radio-box"> <input type="radio" th:field="*{alEnable}" name="menuType" value="1" /> 是 </label>
+                    <label class="radio-box"> <input type="radio" th:field="*{alEnable}" name="menuType" value="0" /> 否 </label>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">最大值：</label>
+                <div class="col-sm-8">
+                    <input name="alMax" th:field="*{alMax}" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">最小值：</label>
+                <div class="col-sm-8">
+                    <input name="alMin" th:field="*{alMin}" class="form-control" type="text">
+                </div>
+            </div>
+                    <input name="chId" th:field="*{chId}" class="form-control" type="hidden">
+                    <input name="sceneId" th:field="*{sceneId}" class="form-control" type="hidden">
+        </form>
+
+    </div>
+    <th:block th:include="include :: footer" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/alarmargument";
+        $("#form-alarmargument-edit").validate({
+            focusCleanup: true,
+            rules:{
+                alMax:{
+                    required: true,
+                    digits:true
+                },
+                alMin:{
+                    required: true,
+                    digits:true
+                },
+
+            }
+        });
+
+        function submitHandler() {
+            if($("#alMax").val()<$("#alMin").val()){
+                $.modal.alertWarning("最大值不能小于最小值");
+                return false;
+            }
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/edit", $('#form-alarmargument-edit').serialize());
+            }
+        }
+    </script>
+</body>
+</html>

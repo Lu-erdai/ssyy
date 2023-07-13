@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <script src="http://lib.baomitu.com/chimee-player/1.1.10/chimee-player.browser.js"></script>
+<style>
+    .title{
+        background-image: url("//datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/8661bc0286c052756490cb954208f30b.png");
+        width: 1920px;
+        height: 115px;
+    }
+    .videosize{
+        width: 500px;
+        height: 300px;
+    }
+
+</style>
+
+</head>
+
+<body style="background-color: #1B3964">
+
+
+
+
+
+<div class="title" style="color: rgb(255, 255, 255);font-size: 50px;text-align: center">
+    高塍水产养殖智慧大屏
+</div>
+
+
+
+<div style="width: 500px;height: 700px;">
+    <div id="wrapper1" class="videosize">
+
+    </div>
+<div style="height: 50px;">
+
+</div>
+    <div id="wrapper2" class="videosize">
+
+    </div>
+
+
+</div>
+
+
+
+
+
+
+
+<script>
+    //http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8
+    new ChimeePlayer({
+        wrapper: '#wrapper1', // video dom容器
+        src: 'http://cmgw-vpc.lechange.com:8888/LCO/7G01D41PAZ70336/0/1/20230601T020017/e00014a379366ed8e6f0381808978de1.m3u8',
+        box: 'hls',
+        isLive: true,
+        autoplay: true,
+        controls: true
+    });
+    new ChimeePlayer({
+        wrapper: '#wrapper2', // video dom容器
+        src: 'http://cmgw-vpc.lechange.com:8888/LCO/7J042B9PAZ22C4E/0/1/20221128T120415/52e5d8ab840365257cde57fee15c15df.m3u8',
+        box: 'hls',
+        isLive: true,
+        autoplay: true,
+        controls: true
+    });
+</script>
+
+</body>
+</html>

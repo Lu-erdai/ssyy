@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.devctrloperate.mapper.GmDevctrloperateMapper">
+    
+    <resultMap type="GmDevctrloperate" id="GmDevctrloperateResult">
+        <result property="decoId"    column="deco_id"    />
+        <result property="decoErrorcode"    column="deco_errorCode"    />
+        <result property="decoResult"    column="deco_result"    />
+        <result property="decoState"    column="deco_state"    />
+        <result property="decoTime"    column="deco_time"    />
+        <result property="decoType"    column="deco_type"    />
+        <result property="decoUserid"    column="deco_userId"    />
+        <result property="decoUsername"    column="deco_userName"    />
+        <result property="decoUsertype"    column="deco_userType"    />
+        <result property="dectId"    column="dect_id"    />
+        <result property="plaId"    column="pla_id"    />
+        <result property="decoSort"    column="deco_sort"    />
+        <result property="decoUserip"    column="deco_userIp"    />
+        <result property="decoReason"    column="deco_reason"    />
+    </resultMap>
+
+    <sql id="selectGmDevctrloperateVo">
+        select deco_id, deco_errorCode, deco_result, deco_state, deco_time, deco_type, deco_userId, deco_userName, deco_userType, dect_id, pla_id, deco_sort, deco_userIp, deco_reason from gm_devctrloperate
+    </sql>
+
+    <select id="selectGmDevctrloperateList" parameterType="GmDevctrloperate" resultMap="GmDevctrloperateResult">
+        <include refid="selectGmDevctrloperateVo"/>
+        <where>  
+            <if test="decoErrorcode != null "> and deco_errorCode = #{decoErrorcode}</if>
+            <if test="decoResult != null "> and deco_result = #{decoResult}</if>
+            <if test="decoState != null "> and deco_state = #{decoState}</if>
+            <if test="decoTime != null "> and deco_time = #{decoTime}</if>
+            <if test="decoType != null "> and deco_type = #{decoType}</if>
+            <if test="decoUserid != null  and decoUserid != ''"> and deco_userId = #{decoUserid}</if>
+            <if test="decoUsername != null  and decoUsername != ''"> and deco_userName like concat('%', #{decoUsername}, '%')</if>
+            <if test="decoUsertype != null "> and deco_userType = #{decoUsertype}</if>
+            <if test="dectId != null  and dectId != ''"> and dect_id = #{dectId}</if>
+            <if test="plaId != null  and plaId != ''"> and pla_id = #{plaId}</if>
+            <if test="decoSort != null "> and deco_sort = #{decoSort}</if>
+            <if test="decoUserip != null  and decoUserip != ''"> and deco_userIp = #{decoUserip}</if>
+            <if test="decoReason != null  and decoReason != ''"> and deco_reason = #{decoReason}</if>
+        </where>
+    </select>
+    
+    <select id="selectGmDevctrloperateById" parameterType="String" resultMap="GmDevctrloperateResult">
+        <include refid="selectGmDevctrloperateVo"/>
+        where deco_id = #{decoId}
+    </select>
+        
+    <insert id="insertGmDevctrloperate" parameterType="GmDevctrloperate">
+        insert into gm_devctrloperate
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="decoId != null">deco_id,</if>
+            <if test="decoErrorcode != null">deco_errorCode,</if>
+            <if test="decoResult != null">deco_result,</if>
+            <if test="decoState != null">deco_state,</if>
+            <if test="decoTime != null">deco_time,</if>
+            <if test="decoType != null">deco_type,</if>
+            <if test="decoUserid != null">deco_userId,</if>
+            <if test="decoUsername != null">deco_userName,</if>
+            <if test="decoUsertype != null">deco_userType,</if>
+            <if test="dectId != null">dect_id,</if>
+            <if test="plaId != null">pla_id,</if>
+            <if test="decoSort != null">deco_sort,</if>
+            <if test="decoUserip != null">deco_userIp,</if>
+            <if test="decoReason != null">deco_reason,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="decoId != null">#{decoId},</if>
+            <if test="decoErrorcode != null">#{decoErrorcode},</if>
+            <if test="decoResult != null">#{decoResult},</if>
+            <if test="decoState != null">#{decoState},</if>
+            <if test="decoTime != null">#{decoTime},</if>
+            <if test="decoType != null">#{decoType},</if>
+            <if test="decoUserid != null">#{decoUserid},</if>
+            <if test="decoUsername != null">#{decoUsername},</if>
+            <if test="decoUsertype != null">#{decoUsertype},</if>
+            <if test="dectId != null">#{dectId},</if>
+            <if test="plaId != null">#{plaId},</if>
+            <if test="decoSort != null">#{decoSort},</if>
+            <if test="decoUserip != null">#{decoUserip},</if>
+            <if test="decoReason != null">#{decoReason},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGmDevctrloperate" parameterType="GmDevctrloperate">
+        update gm_devctrloperate
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="decoErrorcode != null">deco_errorCode = #{decoErrorcode},</if>
+            <if test="decoResult != null">deco_result = #{decoResult},</if>
+            <if test="decoState != null">deco_state = #{decoState},</if>
+            <if test="decoTime != null">deco_time = #{decoTime},</if>
+            <if test="decoType != null">deco_type = #{decoType},</if>
+            <if test="decoUserid != null">deco_userId = #{decoUserid},</if>
+            <if test="decoUsername != null">deco_userName = #{decoUsername},</if>
+            <if test="decoUsertype != null">deco_userType = #{decoUsertype},</if>
+            <if test="dectId != null">dect_id = #{dectId},</if>
+            <if test="plaId != null">pla_id = #{plaId},</if>
+            <if test="decoSort != null">deco_sort = #{decoSort},</if>
+            <if test="decoUserip != null">deco_userIp = #{decoUserip},</if>
+            <if test="decoReason != null">deco_reason = #{decoReason},</if>
+        </trim>
+        where deco_id = #{decoId}
+    </update>
+
+    <delete id="deleteGmDevctrloperateById" parameterType="String">
+        delete from gm_devctrloperate where deco_id = #{decoId}
+    </delete>
+
+    <delete id="deleteGmDevctrloperateByIds" parameterType="String">
+        delete from gm_devctrloperate where deco_id in 
+        <foreach item="decoId" collection="array" open="(" separator="," close=")">
+            #{decoId}
+        </foreach>
+    </delete>
+
+</mapper>

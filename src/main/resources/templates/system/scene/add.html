@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+    <th:block th:include="include :: header('新增场景')" />
+    <th:block th:include="include :: datetimepicker-css" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-scene-add">
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">父ID：</label>
+                <div class="col-sm-8">
+                    <input name="parentId" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">排序号：</label>
+                <div class="col-sm-8">
+                    <input name="sceneOrder" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景所在地：</label>
+                <div class="col-sm-8">
+                    <input name="sceneAddr" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景添加时间：</label>
+                <div class="col-sm-8">
+                    <div class="input-group date">
+                        <input name="sceneCreatedate" class="form-control" placeholder="yyyy-MM-dd" type="text">
+                        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">创建者：</label>
+                <div class="col-sm-8">
+                    <input name="sceneCreater" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景类型子类：</label>
+                <div class="col-sm-8">
+                    <select name="sceneCtype" class="form-control m-b">
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的说明：</label>
+                <div class="col-sm-8">
+                    <input name="sceneDesc" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="sceneImage" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="sceneKeyword" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="sceneName" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="sceneNo" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="scenePid" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="sceneRank" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <input name="sceneState" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">场景的图片：</label>
+                <div class="col-sm-8">
+                    <select name="sceneType" class="form-control m-b">
+                        <option value="">所有</option>
+                    </select>
+                    <span class="help-block m-b-none"><i class="fa fa-info-circle"></i> 代码生成请选择字典属性</span>
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">定制路径：</label>
+                <div class="col-sm-8">
+                    <input name="sceneUrl" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">纬度：</label>
+                <div class="col-sm-8">
+                    <input name="sceneLatitude" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">经度：</label>
+                <div class="col-sm-8">
+                    <input name="sceneLongitude" class="form-control" type="text">
+                </div>
+            </div>
+            <div class="form-group">    
+                <label class="col-sm-3 control-label">视频点URL：</label>
+                <div class="col-sm-8">
+                    <input name="sceneVideourl" class="form-control" type="text">
+                </div>
+            </div>
+        </form>
+    </div>
+    <th:block th:include="include :: footer" />
+    <th:block th:include="include :: datetimepicker-js" />
+    <script th:inline="javascript">
+        var prefix = ctx + "system/scene"
+        $("#form-scene-add").validate({
+            focusCleanup: true
+        });
+
+        function submitHandler() {
+            if ($.validate.form()) {
+                $.operate.save(prefix + "/add", $('#form-scene-add').serialize());
+            }
+        }
+
+        $("input[name='sceneCreatedate']").datetimepicker({
+            format: "yyyy-mm-dd",
+            minView: "month",
+            autoclose: true
+        });
+    </script>
+</body>
+</html>

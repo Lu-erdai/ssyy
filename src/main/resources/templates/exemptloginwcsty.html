@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+</head>
+<body class="gray-bg">
+<div class="container-div">
+
+<!--免登陆配置-->
+</div>
+<th:block th:include="include :: footer"/>
+<script th:inline="javascript">
+
+    $(function () {
+        var nav = [[${nav}]];
+        var username = "";
+        var password = "";
+        if (nav == 1) {//万成生态园
+            username = "wcsty";
+            password = "wcsty";
+        }
+        if (nav == 2) {//十里清风农场
+            username = "slqfnc";
+            password = "slqfnc";
+        }
+        if (nav == 3) {//赭洛山茶厂
+            username = "zlscy";
+            password = "zlscy";
+        }
+        if (nav == 4) {//周奇海家庭农场
+            username = "cmzqh";
+            password = "cmzqh";
+        }
+        if (nav == 5) {//邵贤豹
+            username = "scsxb";
+            password = "scsxb";
+        }
+        if (nav == 6) {//颖丰果园
+            username = "yfgy";
+            password = "yfgy123";
+        }
+        if (nav == 7) {//陶都国兰
+            username = "tdgl";
+            password = "tdgl123";
+        }
+        if (nav == 8) {//茶研所
+            username = "cys";
+            password = "cys123";
+        }if (nav == 9) {//LHD
+            username = "lhd";
+            password = "lhd123";
+        }if(nav=="ttadmin"){
+           username = "admin";
+            password = "admin123";
+        }
+
+
+        var validateCode = $("input[name='validateCode']").val();
+        var rememberMe = $("input[name='rememberme']").is(':checked');
+        $.ajax({
+            type: "post",
+            url: ctx + "login",
+            data: {
+                "username": username,
+                "password": password,
+                "validateCode": validateCode,
+                "rememberMe": rememberMe
+            },
+            success: function (r) {
+                if (r.code == 0) {
+                    location.href = ctx + 'index';
+                } else {
+                    $.modal.closeLoading();
+                    $('.imgcode').click();
+                    $(".code").val("");
+                    $.modal.msg(r.msg);
+                }
+            }
+        });
+
+
+    });
+
+
+</script>
+</body>
+</html>

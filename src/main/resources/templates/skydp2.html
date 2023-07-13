@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <script src="http://lib.baomitu.com/chimee-player/1.1.10/chimee-player.browser.js"></script>
+    <style>
+        /*.title{*/
+        /*    background-image: url("//datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/8661bc0286c052756490cb954208f30b.png");*/
+        /*    width: 1920px;*/
+        /*    height: 115px;*/
+        /*}*/
+        /*.videosize{*/
+        /*    width: 500px;*/
+        /*    height: 300px;*/
+        /*}*/
+
+        .container {
+            display: grid;
+            grid-template-columns: 640px 640px 640px;
+            /*grid-template-rows: 0.5fr 0.3fr 1.4fr 0.3fr 1.7fr 1.8fr;*/
+            grid-template-rows: 80px 54px 252px 54px 306px 324px;
+            gap: 10px 10px;
+            grid-auto-flow: row;
+            grid-template-areas:
+    "title title title"
+    "jieshao controltitle canshutitle"
+    "jieshao control canshutable"
+    "videotitle control canshutable"
+    "video1 control canshutable"
+    "video2 control canshutable";
+            height: 1064px;
+            width: 1920px;
+        }
+
+        .title {
+            grid-area: title;
+            /*background-image: url("//datav.oss-cn-hangzhou.aliyuncs.com/uploads/images/8661bc0286c052756490cb954208f30b.png");*/
+        }
+
+        .controltitle {
+            grid-area: controltitle;
+        }
+
+        .canshutitle {
+            grid-area: canshutitle;
+        }
+
+        .videotitle {
+            grid-area: videotitle;
+        }
+
+        .jieshao {
+            grid-area: jieshao;
+        }
+
+        .video1 {
+            grid-area: video1;
+            /*width: 500px;*/
+            /*height: 300px;*/
+        }
+
+        .video2 {
+            grid-area: video2;
+            /*width: 500px;*/
+            /*height: 300px;*/
+        }
+
+        .control {
+            grid-area: control;
+            border:3px solid #1b6d85;
+        }
+
+        .canshutable {
+            grid-area: canshutable;
+            border:3px solid #1b6d85;
+        }
+
+
+    </style>
+
+</head>
+<!--1B3964-->
+<body style="background-color: #0a182b">
+
+
+<div class="container">
+    <div class="title" style="color: rgb(255, 255, 255);font-size: 50px;text-align: center;height: 74px">
+        高塍水产养殖智慧大屏
+
+    </div>
+    <div class="controltitle" style="text-align: center;color: rgb(255, 255, 255)">
+        投 喂 控 制
+    </div>
+    <div class="canshutitle" style="text-align: center;color: rgb(255, 255, 255)">
+        设 备 参 数
+    </div>
+    <div class="videotitle" style="text-align: left;color: rgb(255, 255, 255);font-size: 30px;">
+        视 频 监 控
+    </div>
+    <div class="jieshao" style="color: rgb(255, 255, 255);text-align: center;height:250px;  font-size: 18px;">
+        本站所有文章，如无特殊说明或标注，均为本站原创发布。
+        任何个人或组织，在未征得本站同意时，禁止复制、盗用、采集、发布本站内容到任何网站、书籍等各类媒体平台。
+        如若本站内容侵犯了原著者的合法权益，可联系我们进行处理。本站所有文章，如无特殊说明或标注，均为本站原创发布。
+        任何个人或组织，在未征得本站同意时，禁止复制、盗用、采集、发布本站内容到任何网站、书籍等各类媒体平台。
+        如若本站内容侵犯了原著者的合法权益，可联系我们进行处理。
+
+    </div>
+    <div class="video1" id="wrapper1">
+
+    </div>
+    <div class="video2" id="wrapper2">
+
+    </div>
+    <div class="control" style="background-color: #1B3964">
+        <div style="color: rgb(255, 255, 255);text-align: center">轨道小车操作</div>
+        <div style="color:rgb(255, 255, 255)">
+           运行状态:<button>前进</button><button>后退</button><button>停止</button>
+        </div>
+        <div style="color:rgb(255, 255, 255)">
+            速度调节:<button>+</button><button>-</button>速度值1.0-50.0
+        </div>
+        <div>
+            到达终点立即返回
+        </div>
+
+
+    </div>
+    <div class="canshutable">
+
+
+
+    </div>
+</div>
+
+<!--<div class="title" style="color: rgb(255, 255, 255);font-size: 50px;text-align: center">-->
+<!--    高塍水产养殖智慧大屏-->
+<!--</div>-->
+
+
+<!--<div style="width: 500px;height: 700px;">-->
+<!--    <div id="wrapper1" class="videosize">-->
+
+<!--    </div>-->
+<!--<div style="height: 50px;">-->
+
+<!--</div>-->
+<!--    <div id="wrapper2" class="videosize">-->
+
+<!--    </div>-->
+
+
+<!--</div>-->
+
+
+<script>
+    //http://devimages.apple.com/iphone/samples/bipbop/gear1/prog_index.m3u8
+    new ChimeePlayer({
+        wrapper: '#wrapper1', // video dom容器
+        src: 'http://cmgw-vpc.lechange.com:8888/LCO/7J042B9PAZ22C4E/0/1/20221128T120415/52e5d8ab840365257cde57fee15c15df.m3u8',
+        box: 'hls',
+        isLive: true,
+        autoplay: true,
+        controls: true
+    });
+    new ChimeePlayer({
+        wrapper: '#wrapper2', // video dom容器
+        src: 'http://cmgw-vpc.lechange.com:8888/LCO/7J042B9PAZ22C4E/0/1/20221128T120415/52e5d8ab840365257cde57fee15c15df.m3u8',
+        box: 'hls',
+        isLive: true,
+        autoplay: true,
+        controls: true
+    });
+</script>
+
+</body>
+</html>

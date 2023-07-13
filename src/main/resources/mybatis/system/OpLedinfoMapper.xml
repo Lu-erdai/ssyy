@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.ledinfo.mapper.OpLedinfoMapper">
+    
+    <resultMap type="OpLedinfo" id="OpLedinfoResult">
+        <result property="ledId"    column="led_id"    />
+        <result property="ledContent"    column="led_content"    />
+        <result property="ledEnable"    column="led_enable"    />
+        <result property="ledInterval"    column="led_interval"    />
+        <result property="ledName"    column="led_name"    />
+        <result property="ledNo"    column="led_no"    />
+    </resultMap>
+
+    <sql id="selectOpLedinfoVo">
+        select led_id, led_content, led_enable, led_interval, led_name, led_no from op_ledinfo
+    </sql>
+
+    <select id="selectOpLedinfoList" parameterType="OpLedinfo" resultMap="OpLedinfoResult">
+        <include refid="selectOpLedinfoVo"/>
+        <where>  
+            <if test="ledId != null  and ledId != ''"> and led_id = #{ledId}</if>
+            <if test="ledContent != null  and ledContent != ''"> and led_content = #{ledContent}</if>
+            <if test="ledEnable != null "> and led_enable = #{ledEnable}</if>
+            <if test="ledInterval != null "> and led_interval = #{ledInterval}</if>
+            <if test="ledName != null  and ledName != ''"> and led_name like concat('%', #{ledName}, '%')</if>
+            <if test="ledNo != null  and ledNo != ''"> and led_no = #{ledNo}</if>
+        </where>
+    </select>
+    
+    <select id="selectOpLedinfoById" parameterType="String" resultMap="OpLedinfoResult">
+        <include refid="selectOpLedinfoVo"/>
+        where led_id = #{ledId}
+    </select>
+        
+    <insert id="insertOpLedinfo" parameterType="OpLedinfo">
+        insert into op_ledinfo
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="ledId != null and ledId != ''">led_id,</if>
+            <if test="ledContent != null">led_content,</if>
+            <if test="ledEnable != null">led_enable,</if>
+            <if test="ledInterval != null">led_interval,</if>
+            <if test="ledName != null">led_name,</if>
+            <if test="ledNo != null">led_no,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="ledId != null and ledId != ''">#{ledId},</if>
+            <if test="ledContent != null">#{ledContent},</if>
+            <if test="ledEnable != null">#{ledEnable},</if>
+            <if test="ledInterval != null">#{ledInterval},</if>
+            <if test="ledName != null">#{ledName},</if>
+            <if test="ledNo != null">#{ledNo},</if>
+         </trim>
+    </insert>
+
+    <update id="updateOpLedinfo" parameterType="OpLedinfo">
+        update op_ledinfo
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="ledContent != null">led_content = #{ledContent},</if>
+            <if test="ledEnable != null">led_enable = #{ledEnable},</if>
+            <if test="ledInterval != null">led_interval = #{ledInterval},</if>
+            <if test="ledName != null">led_name = #{ledName},</if>
+            <if test="ledNo != null">led_no = #{ledNo},</if>
+        </trim>
+        where led_id = #{ledId}
+    </update>
+
+    <delete id="deleteOpLedinfoById" parameterType="String">
+        delete from op_ledinfo where led_id = #{ledId}
+    </delete>
+
+    <delete id="deleteOpLedinfoByIds" parameterType="String">
+        delete from op_ledinfo where led_id in 
+        <foreach item="ledId" collection="array" open="(" separator="," close=")">
+            #{ledId}
+        </foreach>
+    </delete>
+
+</mapper>

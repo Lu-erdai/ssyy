@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.project.system.skyinfo.mapper.SkyInfoMapper">
+    
+    <resultMap type="SkyInfo" id="SkyInfoResult">
+        <result property="id"    column="id"    />
+        <result property="token"    column="token"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="projectName"    column="project_name"    />
+        <result property="boxId"    column="box_id"    />
+        <result property="boxName"    column="box_name"    />
+        <result property="plcId"    column="plc_id"    />
+        <result property="recordTime"    column="record_time"    />
+        <result property="expire"    column="expire"    />
+    </resultMap>
+
+    <sql id="selectSkyInfoVo">
+        select id, token, project_id, project_name, box_id, box_name, plc_id, record_time, expire from sky_info
+    </sql>
+
+    <select id="selectSkyInfoList" parameterType="SkyInfo" resultMap="SkyInfoResult">
+        <include refid="selectSkyInfoVo"/>
+        <where>  
+            <if test="token != null  and token != ''"> and token = #{token}</if>
+            <if test="projectId != null  and projectId != ''"> and project_id = #{projectId}</if>
+            <if test="projectName != null  and projectName != ''"> and project_name like concat('%', #{projectName}, '%')</if>
+            <if test="boxId != null  and boxId != ''"> and box_id = #{boxId}</if>
+            <if test="boxName != null  and boxName != ''"> and box_name like concat('%', #{boxName}, '%')</if>
+            <if test="plcId != null  and plcId != ''"> and plc_id = #{plcId}</if>
+            <if test="recordTime != null "> and record_time = #{recordTime}</if>
+            <if test="expire != null  and expire != ''"> and expire = #{expire}</if>
+        </where>
+    </select>
+    
+    <select id="selectSkyInfoById" parameterType="Long" resultMap="SkyInfoResult">
+        <include refid="selectSkyInfoVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertSkyInfo" parameterType="SkyInfo">
+        insert into sky_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">id,</if>
+            <if test="token != null">token,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="projectName != null">project_name,</if>
+            <if test="boxId != null">box_id,</if>
+            <if test="boxName != null">box_name,</if>
+            <if test="plcId != null">plc_id,</if>
+            <if test="recordTime != null">record_time,</if>
+            <if test="expire != null">expire,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">#{id},</if>
+            <if test="token != null">#{token},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="projectName != null">#{projectName},</if>
+            <if test="boxId != null">#{boxId},</if>
+            <if test="boxName != null">#{boxName},</if>
+            <if test="plcId != null">#{plcId},</if>
+            <if test="recordTime != null">#{recordTime},</if>
+            <if test="expire != null">#{expire},</if>
+         </trim>
+    </insert>
+
+    <update id="updateSkyInfo" parameterType="SkyInfo">
+        update sky_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="token != null">token = #{token},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="projectName != null">project_name = #{projectName},</if>
+            <if test="boxId != null">box_id = #{boxId},</if>
+            <if test="boxName != null">box_name = #{boxName},</if>
+            <if test="plcId != null">plc_id = #{plcId},</if>
+            <if test="recordTime != null">record_time = #{recordTime},</if>
+            <if test="expire != null">expire = #{expire},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSkyInfoById" parameterType="Long">
+        delete from sky_info where id = #{id}
+    </delete>
+
+    <delete id="deleteSkyInfoByIds" parameterType="String">
+        delete from sky_info where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>
